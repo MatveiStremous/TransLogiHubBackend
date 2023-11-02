@@ -1,1 +1,22 @@
+server:
+  port: 8080
 
+spring:
+  application:
+    name: auth-service
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/tlh-auth
+    username: postgres
+    password: 14052003
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true
+    hibernate:
+      ddl-auto: update
+
+jwt.access.secret: SECRET
+token.lifetime.in.minutes: 60
