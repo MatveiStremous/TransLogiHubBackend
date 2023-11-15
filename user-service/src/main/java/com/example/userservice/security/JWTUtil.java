@@ -2,6 +2,7 @@ package com.example.userservice.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -30,5 +31,11 @@ public class JWTUtil {
                 .withIssuer(ISSUER)
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(accessSecret));
+    }
+
+    public String getLoginFromToken(String fullJwtToken){
+        String jwtToken = fullJwtToken.substring(7);
+        DecodedJWT decodedJWT = JWT.decode(jwtToken);
+        return decodedJWT.getClaim("login").asString();
     }
 }
