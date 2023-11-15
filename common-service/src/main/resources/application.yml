@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: common-api
+    name: common-service
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/tlh-common
