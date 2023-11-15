@@ -10,7 +10,7 @@ import com.example.userservice.model.User;
 import com.example.userservice.model.enums.Role;
 import com.example.userservice.security.JWTUtil;
 import com.example.userservice.service.AuthService;
-import com.example.userservice.service.UserService;
+import com.example.userservice.service.AuthUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserService userService;
+    private final AuthUserService authUserService;
     private final PasswordEncoder passwordEncoder;
     private final JWTUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -45,10 +45,10 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.ROLE_MANAGER)
                 .isActive(true)
                 .build();
-        Optional<User> userFromDB = userService.findByLogin(user.getLogin());
+        Optional<User> userFromDB = authUserService.findByLogin(user.getLogin());
         if (userFromDB.isEmpty()) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            User savedUser = userService.save(user);
+            User savedUser = authUserService.save(user);
             String token = jwtUtil.generateAccessToken(savedUser.getLogin());
             return new AuthResponse(savedUser.getLogin(), token);
         } else {
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest, String fullJwtToken) {
         String login = jwtUtil.getLoginFromToken(fullJwtToken);
-        User user = userService.findByLogin(login)
+        User user = authUserService.findByLogin(login)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
 
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -84,6 +84,6 @@ public class AuthServiceImpl implements AuthService {
             throw new BusinessException(HttpStatus.CONFLICT, WRONG_OLD_PASSWORD);
         }
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-        userService.update(user.getId(), user);
+        authUserService.update(user.getId(), user);
     }
 }

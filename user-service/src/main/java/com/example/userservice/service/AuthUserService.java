@@ -4,8 +4,10 @@ import com.example.userservice.model.User;
 
 import java.util.Optional;
 
-public interface UserService {
+public interface AuthUserService {
     Optional<User> findByLogin(String login);
+
     User save(User user);
+
     User update(Integer userId, User updatedUser);
 }
