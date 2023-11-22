@@ -4,6 +4,8 @@ import com.example.commonservice.model.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 @Getter
@@ -25,5 +27,8 @@ public class User {
     private String lastName;
     private String middleName;
     private String phone;
-
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Convoy convoy;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "driver")
+    private List<Transportation> transportations;
 }

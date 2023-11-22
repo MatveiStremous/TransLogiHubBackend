@@ -4,6 +4,8 @@ import com.example.commonservice.model.enums.TransportStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,4 +26,8 @@ public class Trailer {
     private String note;
     @Column(columnDefinition = "boolean default true")
     private Boolean isActive;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "trailer")
+    private List<Transportation> transportations;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Convoy convoy;
 }

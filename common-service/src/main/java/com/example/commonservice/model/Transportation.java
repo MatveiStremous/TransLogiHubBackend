@@ -1,8 +1,7 @@
 package com.example.commonservice.model;
 
-import com.example.commonservice.model.enums.TransportStatus;
+import com.example.commonservice.model.enums.TransportationStatus;
 import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,15 +10,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Year;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,22 +24,26 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Truck {
+public class Transportation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String stateNumber;
-    private Integer mileage;
-    private Year yearOfIssue;
-    private Integer maxCargoWeight;
-    @Enumerated(EnumType.STRING)
-    private TransportStatus status;
     private Integer weight;
+    private Integer finalDistance;
+    private Integer spentFuel;
     private String note;
-    @Column(columnDefinition = "boolean default true")
-    private Boolean isActive;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "truck")
-    private List<Transportation> transportations;
+    private LocalDateTime dateOfLoading;
+    private LocalDateTime dateOfUnloading;
+    @Enumerated(EnumType.STRING)
+    private TransportationStatus status;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Order order;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private User driver;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Truck truck;
+    @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
+    private Trailer trailer;
     @ManyToOne(cascade = CascadeType.REFRESH, fetch = FetchType.LAZY)
     private Convoy convoy;
 }
