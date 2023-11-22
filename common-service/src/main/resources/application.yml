@@ -17,3 +17,11 @@ spring:
         show_sql: true
     hibernate:
       ddl-auto: create
+
+jwt:
+  access:
+    secret: SECRET
+token:
+  lifetime:
+    in:
+      minutes: 60

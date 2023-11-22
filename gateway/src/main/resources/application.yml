@@ -11,10 +11,10 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        - id: user-service
-          uri: http://localhost:8080
-          predicates:
-            - Path=/user/**
+#        - id: user-service
+#          uri: http://localhost:8080
+#          predicates:
+#            - Path=/user/**
         - id: common-service
           uri: http://localhost:8081
           predicates:
