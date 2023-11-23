@@ -30,6 +30,8 @@ public class Trailer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String brand;
+    private String model;
     private String stateNumber;
     private Integer maxCargoWeight;
     @Enumerated(EnumType.STRING)

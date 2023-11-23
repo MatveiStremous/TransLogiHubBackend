@@ -8,6 +8,8 @@ import lombok.Setter;
 @Setter
 public class TrailerRequest {
     private String stateNumber;
+    private String brand;
+    private String model;
     private Integer maxCargoWeight;
     private TransportStatus status;
     private Integer weight;

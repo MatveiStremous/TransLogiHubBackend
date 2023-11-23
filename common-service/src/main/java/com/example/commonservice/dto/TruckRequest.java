@@ -10,6 +10,8 @@ import java.time.Year;
 @Setter
 public class TruckRequest {
     private String stateNumber;
+    private String brand;
+    private String model;
     private Integer mileage;
     private Year yearOfIssue;
     private Integer maxCargoWeight;

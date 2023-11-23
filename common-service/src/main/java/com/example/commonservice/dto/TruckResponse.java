@@ -15,6 +15,8 @@ import java.time.Year;
 public class TruckResponse {
     private Integer id;
     private String stateNumber;
+    private String brand;
+    private String model;
     private Integer mileage;
     private Year yearOfIssue;
     private Integer maxCargoWeight;

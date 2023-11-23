@@ -13,6 +13,8 @@ import lombok.Setter;
 public class TrailerResponse {
     private Integer id;
     private String stateNumber;
+    private String brand;
+    private String model;
     private Integer maxCargoWeight;
     private TransportStatus status;
     private Integer weight;

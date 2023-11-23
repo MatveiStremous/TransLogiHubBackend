@@ -31,6 +31,8 @@ public class Truck {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    private String brand;
+    private String model;
     private String stateNumber;
     private Integer mileage;
     private Year yearOfIssue;
