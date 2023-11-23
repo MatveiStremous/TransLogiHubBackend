@@ -18,5 +18,5 @@ public class TrailerResponse {
     private Integer weight;
     private String note;
     private Boolean isActive;
-    private Integer typeId;
+    private TrailerTypeResponse type;
 }

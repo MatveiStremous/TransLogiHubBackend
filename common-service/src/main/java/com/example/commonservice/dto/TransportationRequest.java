@@ -17,7 +17,7 @@ public class TransportationRequest {
     private LocalDateTime dateOfUnloading;
     private TransportationStatus status;
     private Integer orderId;
-    private Integer driverId;
+    private String driverLogin;
     private Integer truckId;
     private Integer trailerId;
     private Integer convoyId;

@@ -49,6 +49,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getByLoginWithId(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
+    }
+
+    @Override
     public void deleteByLogin(String login) {
         User userFromDb = getUserEntityByLogin(login);
         if (!userFromDb.getIsActive()) {
