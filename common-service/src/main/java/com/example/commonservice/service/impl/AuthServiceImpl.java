@@ -5,13 +5,17 @@ import com.example.commonservice.dto.AuthRequest;
 import com.example.commonservice.dto.AuthResponse;
 import com.example.commonservice.dto.ChangePasswordRequest;
 import com.example.commonservice.dto.SignUpRequest;
+import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.exception.BusinessException;
+import com.example.commonservice.kafka.MailProducer;
+import com.example.commonservice.kafka.dto.MailKafkaDto;
 import com.example.commonservice.model.User;
-import com.example.commonservice.model.enums.Role;
 import com.example.commonservice.security.JWTUtil;
+import com.example.commonservice.security.PasswordGenerator;
 import com.example.commonservice.service.AuthService;
 import com.example.commonservice.service.AuthUserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,7 +30,10 @@ import java.util.Optional;
 public class AuthServiceImpl implements AuthService {
     private final AuthUserService authUserService;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordGenerator passwordGenerator;
+    private final MailProducer mailProducer;
     private final JWTUtil jwtUtil;
+    private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final String LOGIN_ALREADY_REGISTERED = "This login is already registered.";
     private final String WRONG_LOGIN_OR_PASSWORD = "Wrong login or password.";
@@ -34,23 +41,31 @@ public class AuthServiceImpl implements AuthService {
     private final String USER_DOES_NOT_EXIST = "User with this login doesn't exist.";
 
     @Override
-    public AuthResponse signup(SignUpRequest signUpRequest) {
+    public UserResponse signup(SignUpRequest signUpRequest) {
         User user = User.builder()
                 .login(signUpRequest.getLogin())
-                .password(signUpRequest.getPassword())
+                .password(passwordGenerator.generatePassword())
                 .phone(signUpRequest.getPhone())
                 .firstName(signUpRequest.getFirstName())
                 .lastName(signUpRequest.getLastName())
                 .middleName(signUpRequest.getMiddleName())
-                .role(Role.ROLE_MANAGER)
+                .role(signUpRequest.getRole())
                 .isActive(true)
                 .build();
         Optional<User> userFromDB = authUserService.findByLogin(user.getLogin());
         if (userFromDB.isEmpty()) {
+            MailKafkaDto mailKafkaDto = MailKafkaDto.builder()
+                    .consumerEmail(user.getLogin())
+                    .topicName("Успешная регистрация")
+                    .message("Вы были зарегистрированы в TransLogiHub.\nВаш логин: "
+                            + user.getLogin() + "\nВаш пароль: " + user.getPassword())
+                    .build();
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User savedUser = authUserService.save(user);
-            String token = jwtUtil.generateAccessToken(savedUser.getLogin());
-            return new AuthResponse(savedUser.getLogin(), token);
+
+            mailProducer.sendMailKafkaDtoToConsumer(mailKafkaDto);
+
+            return modelMapper.map(savedUser, UserResponse.class);
         } else {
             throw new BusinessException(HttpStatus.CONFLICT, LOGIN_ALREADY_REGISTERED);
         }

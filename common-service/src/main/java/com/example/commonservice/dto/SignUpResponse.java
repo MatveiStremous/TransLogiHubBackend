@@ -6,12 +6,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SignUpRequest {
+public class SignUpResponse {
     private String login;
     private Role role;
     private String firstName;
     private String lastName;
     private String middleName;
     private String phone;
-
 }

@@ -1,0 +1,24 @@
+server:
+  port: 8088
+
+spring:
+  application:
+    name: mail-sender-service
+  kafka:
+    bootstrap-servers: http://localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+topic:
+  name: simple.mail.topic
+
+topic-group:
+  name: mail-group
+
+
+mail:
+  host: smtp.gmail.com
+  username:
+  password:
+  port: 587

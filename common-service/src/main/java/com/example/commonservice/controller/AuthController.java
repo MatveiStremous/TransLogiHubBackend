@@ -4,6 +4,7 @@ import com.example.commonservice.dto.AuthRequest;
 import com.example.commonservice.dto.AuthResponse;
 import com.example.commonservice.dto.ChangePasswordRequest;
 import com.example.commonservice.dto.SignUpRequest;
+import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public AuthResponse register(@RequestBody SignUpRequest signUpRequest) {
+    public UserResponse register(@RequestBody SignUpRequest signUpRequest) {
         return authService.signup(signUpRequest);
     }
 

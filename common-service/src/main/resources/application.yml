@@ -17,6 +17,14 @@ spring:
         show_sql: true
     hibernate:
       ddl-auto: create
+  kafka:
+    bootstrap-servers: http://localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+topic:
+  name: simple.mail.topic
 
 jwt:
   access:
