@@ -35,6 +35,7 @@ public class AuthServiceImpl implements AuthService {
     private final JWTUtil jwtUtil;
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
+    private final Integer TOKEN_START_POSITION = 7;
     private final String LOGIN_ALREADY_REGISTERED = "This login is already registered.";
     private final String WRONG_LOGIN_OR_PASSWORD = "Wrong login or password.";
     private final String WRONG_OLD_PASSWORD = "Wrong old password.";
@@ -80,14 +81,17 @@ public class AuthServiceImpl implements AuthService {
         } catch (BadCredentialsException e) {
             throw new BusinessException(HttpStatus.BAD_REQUEST, WRONG_LOGIN_OR_PASSWORD);
         }
+        User user = authUserService.findByLogin(authRequest.getLogin())
+                .orElseThrow(() -> new BusinessException(HttpStatus.UNAUTHORIZED, WRONG_LOGIN_OR_PASSWORD));
 
-        String token = jwtUtil.generateAccessToken(authRequest.getLogin());
+        String token = jwtUtil.generateAccessToken(user);
         return new AuthResponse(authRequest.getLogin(), token);
     }
 
     @Override
     public void changePassword(ChangePasswordRequest changePasswordRequest, String fullJwtToken) {
-        String login = jwtUtil.getLoginFromToken(fullJwtToken);
+        String token = fullJwtToken.substring(TOKEN_START_POSITION);
+        String login = jwtUtil.getClaimFromToken(token, "login");
         User user = authUserService.findByLogin(login)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
 
