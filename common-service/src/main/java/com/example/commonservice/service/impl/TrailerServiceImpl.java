@@ -11,6 +11,7 @@ import com.example.commonservice.service.TrailerService;
 import com.example.commonservice.service.TrailerTypeService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -41,7 +42,7 @@ public class TrailerServiceImpl implements TrailerService {
 
     @Override
     public List<TrailerResponse> getAll() {
-        return trailerRepository.findAll()
+        return trailerRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
                 .toList();
@@ -49,7 +50,7 @@ public class TrailerServiceImpl implements TrailerService {
 
     @Override
     public List<TrailerResponse> getAllActive() {
-        return trailerRepository.findAllByIsActiveTrue()
+        return trailerRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
                 .toList();

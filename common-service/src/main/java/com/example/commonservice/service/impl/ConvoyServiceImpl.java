@@ -8,6 +8,7 @@ import com.example.commonservice.repository.ConvoyRepository;
 import com.example.commonservice.service.ConvoyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -39,7 +40,7 @@ public class ConvoyServiceImpl implements ConvoyService {
 
     @Override
     public List<ConvoyResponse> getAll() {
-        return convoyRepository.findAll()
+        return convoyRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(convoy -> modelMapper.map(convoy, ConvoyResponse.class))
                 .toList();
@@ -47,7 +48,7 @@ public class ConvoyServiceImpl implements ConvoyService {
 
     @Override
     public List<ConvoyResponse> getAllActive() {
-        return convoyRepository.findAllByIsActiveTrue()
+        return convoyRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(convoy -> modelMapper.map(convoy, ConvoyResponse.class))
                 .toList();

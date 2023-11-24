@@ -9,6 +9,7 @@ import com.example.commonservice.repository.OrderRepository;
 import com.example.commonservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> getAll() {
-        return orderRepository.findAll()
+        return orderRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(order -> modelMapper.map(order, OrderResponse.class))
                 .toList();

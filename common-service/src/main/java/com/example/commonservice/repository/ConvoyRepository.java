@@ -1,6 +1,7 @@
 package com.example.commonservice.repository;
 
 import com.example.commonservice.model.Convoy;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,5 @@ public interface ConvoyRepository extends JpaRepository<Convoy, Integer> {
 
     Optional<Convoy> findByNameAndIsActiveFalse(String name);
 
-    List<Convoy> findAllByIsActiveTrue();
+    List<Convoy> findAllByIsActiveTrue(Sort id);
 }

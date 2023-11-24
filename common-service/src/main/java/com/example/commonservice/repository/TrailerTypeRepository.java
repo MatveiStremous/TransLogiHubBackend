@@ -1,6 +1,7 @@
 package com.example.commonservice.repository;
 
 import com.example.commonservice.model.TrailerType;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +14,5 @@ public interface TrailerTypeRepository extends JpaRepository<TrailerType, Intege
 
     Optional<TrailerType> findByNameAndIsActiveFalse(String name);
 
-    List<TrailerType> findAllByIsActiveTrue();
+    List<TrailerType> findAllByIsActiveTrue(Sort id);
 }

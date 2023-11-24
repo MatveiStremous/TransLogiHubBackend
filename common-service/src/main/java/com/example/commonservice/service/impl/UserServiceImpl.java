@@ -8,6 +8,7 @@ import com.example.commonservice.repository.UserRepository;
 import com.example.commonservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAll() {
-        return userRepository.findAll()
+        return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
                 .stream()
                 .map(user -> modelMapper.map(user, UserResponse.class))
                 .toList();

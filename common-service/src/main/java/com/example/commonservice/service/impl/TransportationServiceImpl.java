@@ -10,6 +10,7 @@ import com.example.commonservice.repository.TransportationRepository;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class TransportationServiceImpl implements TransportationService {
 
     @Override
     public List<TransportationResponse> getAll() {
-        return transportationRepository.findAll()
+        return transportationRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
                 .stream()
                 .map(transportation -> modelMapper.map(transportation, TransportationResponse.class))
                 .toList();

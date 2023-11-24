@@ -9,6 +9,7 @@ import com.example.commonservice.repository.TruckRepository;
 import com.example.commonservice.service.TruckService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +38,7 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<TruckResponse> getAll() {
-        return truckRepository.findAll()
+        return truckRepository.findAll(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(x -> modelMapper.map(x, TruckResponse.class))
                 .toList();
@@ -45,7 +46,7 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<TruckResponse> getAllActive() {
-        return truckRepository.findAllByIsActiveTrue()
+        return truckRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
                 .stream()
                 .map(x -> modelMapper.map(x, TruckResponse.class))
                 .toList();

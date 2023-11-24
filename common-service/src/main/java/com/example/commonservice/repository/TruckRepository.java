@@ -1,6 +1,7 @@
 package com.example.commonservice.repository;
 
 import com.example.commonservice.model.Truck;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +12,5 @@ import java.util.Optional;
 public interface TruckRepository extends JpaRepository<Truck, Integer> {
     Optional<Truck> findByStateNumberAndIsActiveTrue(String stateNumber);
 
-    List<Truck> findAllByIsActiveTrue();
+    List<Truck> findAllByIsActiveTrue(Sort id);
 }
