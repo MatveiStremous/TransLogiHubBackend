@@ -5,6 +5,7 @@ import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.mapper.TransportationMapper;
 import com.example.commonservice.model.Transportation;
+import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.repository.TransportationRepository;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public TransportationResponse add(TransportationRequest transportationRequest) {
         Transportation newTransportation = transportationMapper.map(transportationRequest);
+        newTransportation.setStatus(TransportationStatus.FORMED);
         newTransportation = transportationRepository.save(newTransportation);
         return modelMapper.map(newTransportation, TransportationResponse.class);
     }
@@ -52,6 +54,7 @@ public class TransportationServiceImpl implements TransportationService {
         TransportationResponse transportationFromDb = getById(transportationId);
         Transportation transportationForUpdate = transportationMapper.map(transportationRequest);
         transportationForUpdate.setId(transportationId);
+        transportationForUpdate.setStatus(transportationFromDb.getStatus());
         Transportation updatedTransportation = transportationRepository.save(transportationForUpdate);
         return modelMapper.map(updatedTransportation, TransportationResponse.class);
     }

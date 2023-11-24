@@ -5,8 +5,6 @@ import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.TrailerRequest;
 import com.example.commonservice.dto.TrailerTypeRequest;
 import com.example.commonservice.dto.TruckRequest;
-import com.example.commonservice.model.enums.OrderStatus;
-import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.service.AuthService;
 import com.example.commonservice.service.ConvoyService;
 import com.example.commonservice.service.OrderService;
@@ -47,7 +45,6 @@ public class Init {
         trailerRequest.setNote("Полностью обслужен");
         trailerRequest.setMaxCargoWeight(25000);
         trailerRequest.setStateNumber("AB3030-1");
-        trailerRequest.setStatus(TransportStatus.FREE);
         trailerRequest.setWeight(8000);
         trailerRequest.setBrand("Schmitz");
         trailerRequest.setModel("9084");
@@ -57,7 +54,6 @@ public class Init {
         trailerRequest2.setNote("Полностью обслужен");
         trailerRequest2.setMaxCargoWeight(25000);
         trailerRequest2.setStateNumber("AB3031-1");
-        trailerRequest2.setStatus(TransportStatus.FREE);
         trailerRequest2.setWeight(8000);
         trailerRequest.setBrand("Schmitz");
         trailerRequest.setModel("SCS BSEB");
@@ -66,7 +62,6 @@ public class Init {
         TruckRequest truckRequest = new TruckRequest();
         truckRequest.setNote("Нет техосмотра");
         truckRequest.setStateNumber("AB4030-1");
-        truckRequest.setStatus(TransportStatus.FREE);
         truckRequest.setWeight(15000);
         truckRequest.setMaxCargoWeight(30000);
         truckRequest.setMileage(198234);
@@ -77,7 +72,6 @@ public class Init {
         TruckRequest truckRequest2 = new TruckRequest();
         truckRequest2.setNote("Нет техосмотра");
         truckRequest2.setStateNumber("AB4031-1");
-        truckRequest2.setStatus(TransportStatus.FREE);
         truckRequest2.setWeight(15000);
         truckRequest2.setMaxCargoWeight(30000);
         truckRequest2.setMileage(56234);
@@ -95,7 +89,6 @@ public class Init {
         //Order
         OrderRequest orderRequest = new OrderRequest();
         orderRequest.setNote("Стандартная загрузка");
-        orderRequest.setStatus(OrderStatus.IN_PROGRESS);
         orderRequest.setArrivalAddress("Минск");
         orderRequest.setDepartureAddress("Барановичи");
         orderRequest.setCargoName("Металл");

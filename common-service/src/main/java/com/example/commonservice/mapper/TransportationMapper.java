@@ -32,7 +32,6 @@ public class TransportationMapper {
         transportation.setDateOfUnloading(transportationRequest.getDateOfUnloading());
         transportation.setFinalDistance(transportationRequest.getFinalDistance());
         transportation.setWeight(transportationRequest.getWeight());
-        transportation.setStatus(transportationRequest.getStatus());
         transportation.setSpentFuel(transportationRequest.getSpentFuel());
         transportation.setNote(transportationRequest.getNote());
         transportation.setConvoy(mapper.map(convoyService.getById(transportationRequest.getConvoyId()), Convoy.class));

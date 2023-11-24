@@ -4,6 +4,7 @@ import com.example.commonservice.dto.TruckRequest;
 import com.example.commonservice.dto.TruckResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Truck;
+import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.repository.TruckRepository;
 import com.example.commonservice.service.TruckService;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class TruckServiceImpl implements TruckService {
         Truck truck = modelMapper.map(truckRequest, Truck.class);
         truck.setIsActive(true);
         truck.setId(null);
+        truck.setStatus(TransportStatus.FREE);
         Truck newTruck = truckRepository.save(truck);
         return modelMapper.map(newTruck, TruckResponse.class);
     }
@@ -58,6 +60,7 @@ public class TruckServiceImpl implements TruckService {
         Truck truckForUpdate = modelMapper.map(truckRequest, Truck.class);
         truckForUpdate.setId(id);
         truckForUpdate.setIsActive(truckFromDb.getIsActive());
+        truckForUpdate.setStatus(truckFromDb.getStatus());
         Truck updatedTruck = truckRepository.save(truckForUpdate);
         return modelMapper.map(updatedTruck, TruckResponse.class);
     }

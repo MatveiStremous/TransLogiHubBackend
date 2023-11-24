@@ -5,6 +5,7 @@ import com.example.commonservice.dto.TrailerResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Trailer;
 import com.example.commonservice.model.TrailerType;
+import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.repository.TrailerRepository;
 import com.example.commonservice.service.TrailerService;
 import com.example.commonservice.service.TrailerTypeService;
@@ -33,6 +34,7 @@ public class TrailerServiceImpl implements TrailerService {
         trailer.setIsActive(true);
         trailer.setTrailerType(modelMapper.map(trailerTypeService.getById(trailerRequest.getTypeId()), TrailerType.class));
         trailer.setId(null);
+        trailer.setStatus(TransportStatus.FREE);
         Trailer newTrailer = trailerRepository.save(trailer);
         return modelMapper.map(newTrailer, TrailerResponse.class);
     }
@@ -61,6 +63,7 @@ public class TrailerServiceImpl implements TrailerService {
         }
         Trailer trailerForUpdate = modelMapper.map(trailerRequest, Trailer.class);
         trailerForUpdate.setId(id);
+        trailerForUpdate.setStatus(trailerFromDb.getStatus());
         trailerForUpdate.setTrailerType(modelMapper.map(trailerTypeService.getById(trailerRequest.getTypeId()), TrailerType.class));
         trailerForUpdate.setIsActive(trailerFromDb.getIsActive());
         Trailer updatedTrailer = trailerRepository.save(trailerForUpdate);

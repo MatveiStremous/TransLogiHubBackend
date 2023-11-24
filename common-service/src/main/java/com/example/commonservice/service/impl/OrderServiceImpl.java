@@ -4,6 +4,7 @@ import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.OrderResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Order;
+import com.example.commonservice.model.enums.OrderStatus;
 import com.example.commonservice.repository.OrderRepository;
 import com.example.commonservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse add(OrderRequest orderRequest) {
         Order newOrder = modelMapper.map(orderRequest, Order.class);
+        newOrder.setStatus(OrderStatus.FORMED);
         newOrder = orderRepository.save(newOrder);
         return modelMapper.map(newOrder, OrderResponse.class);
     }
@@ -50,6 +52,7 @@ public class OrderServiceImpl implements OrderService {
         OrderResponse orderFromDb = getById(orderId);
         Order orderForUpdate = modelMapper.map(orderRequest, Order.class);
         orderForUpdate.setId(orderId);
+        orderForUpdate.setStatus(orderFromDb.getStatus());
         Order updatedOrder = orderRepository.save(orderForUpdate);
         return modelMapper.map(updatedOrder, OrderResponse.class);
     }

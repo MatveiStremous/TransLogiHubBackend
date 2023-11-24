@@ -1,6 +1,5 @@
 package com.example.commonservice.dto;
 
-import com.example.commonservice.model.enums.TransportationStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +14,6 @@ public class TransportationRequest {
     private String note;
     private LocalDateTime dateOfLoading;
     private LocalDateTime dateOfUnloading;
-    private TransportationStatus status;
     private Integer orderId;
     private String driverLogin;
     private Integer truckId;

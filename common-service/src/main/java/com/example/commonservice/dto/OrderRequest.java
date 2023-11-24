@@ -1,6 +1,5 @@
 package com.example.commonservice.dto;
 
-import com.example.commonservice.model.enums.OrderStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +15,5 @@ public class OrderRequest {
     private String arrivalAddress;
     private LocalDateTime loadingDate;
     private LocalDateTime unloadingDate;
-    private OrderStatus status;
     private String note;
 }
