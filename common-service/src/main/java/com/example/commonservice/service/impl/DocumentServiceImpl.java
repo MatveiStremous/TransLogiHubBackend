@@ -1,10 +1,10 @@
 package com.example.commonservice.service.impl;
 
-import com.example.commonservice.dto.AllEntityDocumentRequest;
 import com.example.commonservice.dto.DocumentRequest;
 import com.example.commonservice.dto.DocumentResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Document;
+import com.example.commonservice.model.enums.DocumentType;
 import com.example.commonservice.repository.DocumentRepository;
 import com.example.commonservice.service.CloudinaryService;
 import com.example.commonservice.service.DocumentService;
@@ -40,14 +40,6 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocumentResponse> getAllByEntityId(AllEntityDocumentRequest allEntityDocumentRequest) {
-        return documentRepository.findAllByIsActiveTrueAndEntityIdAndType(allEntityDocumentRequest.getEntityId(), allEntityDocumentRequest.getType())
-                .stream()
-                .map(doc -> modelMapper.map(doc, DocumentResponse.class))
-                .toList();
-    }
-
-    @Override
     public void deleteById(Integer documentId) {
         Document documentFromDb = getById(documentId);
         if (!documentFromDb.getIsActive()) {
@@ -56,6 +48,14 @@ public class DocumentServiceImpl implements DocumentService {
             documentFromDb.setIsActive(false);
             documentRepository.save(documentFromDb);
         }
+    }
+
+    @Override
+    public List<DocumentResponse> getAllByEntityIdAndType(Integer entityId, DocumentType type) {
+        return documentRepository.findAllByIsActiveTrueAndEntityIdAndType(entityId, type)
+                .stream()
+                .map(doc -> modelMapper.map(doc, DocumentResponse.class))
+                .toList();
     }
 
     private Document getById(Integer id) {
