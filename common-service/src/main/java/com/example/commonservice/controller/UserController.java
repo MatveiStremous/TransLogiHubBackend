@@ -20,6 +20,11 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    @GetMapping("/me")
+    public UserResponse getUserInfo(@RequestHeader("Authorization") String fullToken) {
+        return userService.getUserInfo(fullToken);
+    }
+
     @GetMapping
     public List<UserResponse> getAllUsers() {
         return userService.getAll();

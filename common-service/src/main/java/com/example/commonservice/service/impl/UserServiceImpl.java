@@ -102,4 +102,11 @@ public class UserServiceImpl implements UserService {
             return modelMapper.map(updatedUser, UserResponse.class);
         }
     }
+
+    @Override
+    public UserResponse getUserInfo(String fullJwtToken) {
+        String token = fullJwtToken.substring(TOKEN_START_POSITION);
+        String login = jwtUtil.getClaimFromToken(token, "login");
+        return getByLogin(login);
+    }
 }

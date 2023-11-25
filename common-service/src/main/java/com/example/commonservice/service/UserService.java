@@ -24,4 +24,6 @@ public interface UserService {
     UserResponse blockUser(Integer userId);
 
     UserResponse unblockUser(Integer userId);
+
+    UserResponse getUserInfo(String fullToken);
 }
