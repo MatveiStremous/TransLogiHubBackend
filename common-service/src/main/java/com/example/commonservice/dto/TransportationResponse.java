@@ -1,13 +1,19 @@
 package com.example.commonservice.dto;
 
 import com.example.commonservice.model.enums.TransportationStatus;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
 @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TransportationResponse {
     private Integer id;
     private Integer weight;

@@ -38,71 +38,15 @@ public class Init {
 
     @PostConstruct
     public void initDb() {
-        //TrailerType
-        TrailerTypeRequest trailerTypeRequest = new TrailerTypeRequest();
-        trailerTypeRequest.setName("Шторный");
-        trailerTypeService.add(trailerTypeRequest);
-        TrailerTypeRequest trailerTypeRequest2 = new TrailerTypeRequest();
-        trailerTypeRequest2.setName("Рефрижератор");
-        trailerTypeService.add(trailerTypeRequest2);
-        //Trailer
-        TrailerRequest trailerRequest = new TrailerRequest();
-        trailerRequest.setTypeId(1);
-        trailerRequest.setNote("Полностью обслужен");
-        trailerRequest.setMaxCargoWeight(25000);
-        trailerRequest.setStateNumber("AB3030-1");
-        trailerRequest.setWeight(8000);
-        trailerRequest.setBrand("Schmitz");
-        trailerRequest.setModel("9084");
-        trailerService.add(trailerRequest);
-        TrailerRequest trailerRequest2 = new TrailerRequest();
-        trailerRequest2.setTypeId(2);
-        trailerRequest2.setNote("Полностью обслужен");
-        trailerRequest2.setMaxCargoWeight(25000);
-        trailerRequest2.setStateNumber("AB3031-1");
-        trailerRequest2.setWeight(8000);
-        trailerRequest.setBrand("Schmitz");
-        trailerRequest.setModel("SCS BSEB");
-        trailerService.add(trailerRequest2);
-        //Truck
-        TruckRequest truckRequest = new TruckRequest();
-        truckRequest.setNote("Нет техосмотра");
-        truckRequest.setStateNumber("AB4030-1");
-        truckRequest.setWeight(15000);
-        truckRequest.setMaxCargoWeight(30000);
-        truckRequest.setMileage(198234);
-        truckRequest.setYearOfIssue(Year.of(2018));
-        truckRequest.setBrand("Volvo");
-        truckRequest.setModel("FH12");
-        truckService.add(truckRequest);
-        TruckRequest truckRequest2 = new TruckRequest();
-        truckRequest2.setNote("Нет техосмотра");
-        truckRequest2.setStateNumber("AB4031-1");
-        truckRequest2.setWeight(15000);
-        truckRequest2.setMaxCargoWeight(30000);
-        truckRequest2.setMileage(56234);
-        truckRequest2.setYearOfIssue(Year.of(2019));
-        truckRequest.setBrand("DAF");
-        truckRequest.setModel("XF105");
-        truckService.add(truckRequest2);
-        //Convoy
-        ConvoyRequest convoyRequest = new ConvoyRequest();
-        convoyRequest.setName("1 колонна");
-        convoyService.add(convoyRequest);
-        ConvoyRequest convoyRequest2 = new ConvoyRequest();
-        convoyRequest2.setName("2 колонна");
-        convoyService.add(convoyRequest2);
-        //Order
-        OrderRequest orderRequest = new OrderRequest();
-        orderRequest.setNote("Стандартная загрузка");
-        orderRequest.setArrivalAddress("Минск");
-        orderRequest.setDepartureAddress("Барановичи");
-        orderRequest.setCargoName("Металл");
-        orderRequest.setNumberOfTrucks(5);
-        orderRequest.setLoadingDate(LocalDateTime.parse("2023-11-29T19:00:00"));
-        orderRequest.setUnloadingDate(LocalDateTime.parse("2023-11-30T12:00:00"));
-        orderService.add(orderRequest);
-        //user
+        initTrailerTypes();
+        initTrailers();
+        initTrucks();
+        initConvoys();
+        initOrders();
+        initUsers();
+    }
+
+    private void initUsers(){
         User user = User.builder()
                 .login("manager@gmail.com")
                 .firstName("Михаил")
@@ -136,5 +80,131 @@ public class Init {
                 .build();
         user3.setPassword(passwordEncoder.encode("Logiest123"));
         User savedUser3 = authUserService.save(user3);
+    }
+
+    private void initTrailerTypes() {
+        trailerTypeService.add(TrailerTypeRequest.builder()
+                .name("Шторный")
+                .build());
+        trailerTypeService.add(TrailerTypeRequest.builder()
+                .name("Фургон")
+                .build());
+        trailerTypeService.add(TrailerTypeRequest.builder()
+                .name("Трал")
+                .build());
+        trailerTypeService.add(TrailerTypeRequest.builder()
+                .name("Рефрижератор")
+                .build());
+        trailerTypeService.add(TrailerTypeRequest.builder()
+                .name("Контейнеровоз")
+                .build());
+    }
+
+    private void initTrailers() {
+        trailerService.add(TrailerRequest.builder()
+                .typeId(1)
+                .model("Schmitz")
+                .brand("9084")
+                .maxCargoWeight(25000)
+                .stateNumber("MH2432-5")
+                .yearOfIssue(Year.of(2019))
+                .weight(7500)
+                .note("-")
+                .build());
+        trailerService.add(TrailerRequest.builder()
+                .typeId(1)
+                .model("Schmitz")
+                .brand("SCS BSEB")
+                .maxCargoWeight(24000)
+                .stateNumber("AB4823-1")
+                .yearOfIssue(Year.of(2019))
+                .weight(7300)
+                .note("Примечаний нет")
+                .build());
+        trailerService.add(TrailerRequest.builder()
+                .typeId(2)
+                .model("Schmitz")
+                .brand("9076")
+                .maxCargoWeight(22000)
+                .stateNumber("HB1332-7")
+                .yearOfIssue(Year.of(2015))
+                .weight(7900)
+                .note("-")
+                .build());
+        trailerService.add(TrailerRequest.builder()
+                .typeId(4)
+                .model("Krone")
+                .brand("SD")
+                .maxCargoWeight(21500)
+                .stateNumber("KT8492-1")
+                .yearOfIssue(Year.of(2021))
+                .weight(8100)
+                .note("-")
+                .build());
+    }
+
+    private void initTrucks() {
+        truckService.add(TruckRequest.builder()
+                .model("Volvo")
+                .brand("FH12")
+                .maxCargoWeight(25000)
+                .weight(6900)
+                .mileage(198234)
+                .yearOfIssue(Year.of(2019))
+                .note("-")
+                .stateNumber("AB3042-1")
+                .build());
+        truckService.add(TruckRequest.builder()
+                .model("Daf")
+                .brand("XF105")
+                .maxCargoWeight(25000)
+                .weight(7100)
+                .mileage(100234)
+                .yearOfIssue(Year.of(2022))
+                .note("Тех.осмотр до 30.11.2023")
+                .stateNumber("AB3043-1")
+                .build());
+        truckService.add(TruckRequest.builder()
+                .model("Daf")
+                .brand("XF105")
+                .maxCargoWeight(25000)
+                .weight(7100)
+                .mileage(98234)
+                .yearOfIssue(Year.of(2022))
+                .note("Тех.осмотр до 30.11.2023")
+                .stateNumber("AB3044-1")
+                .build());
+        truckService.add(TruckRequest.builder()
+                .model("Volvo")
+                .brand("FH12")
+                .maxCargoWeight(25000)
+                .weight(6900)
+                .mileage(198234)
+                .yearOfIssue(Year.of(2019))
+                .note("-")
+                .stateNumber("AB3045-1")
+                .build());
+    }
+
+    private void initConvoys() {
+        convoyService.add(ConvoyRequest.builder()
+                .name("1 колонна")
+                .build());
+        convoyService.add(ConvoyRequest.builder()
+                .name("2 колонна")
+                .build());
+    }
+
+    private void initOrders() {
+        orderService.add(OrderRequest.builder()
+                .note("Стандартная загрузка")
+                .arrivalAddress("Минск, ул.Я.Коласа 123")
+                .departureAddress("Барановичи, ул.Ленина 13")
+                .cargoName("Металлические слитки")
+                .totalWeight(150000)
+                .loadingDate(LocalDateTime.parse("2023-11-29T19:00:00"))
+                .unloadingDate(LocalDateTime.parse("2023-11-30T12:00:00"))
+                .numberOfTrucks(5)
+                .build());
     }
 }

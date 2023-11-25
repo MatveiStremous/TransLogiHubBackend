@@ -1,12 +1,18 @@
 package com.example.commonservice.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Year;
 
-@Getter
 @Setter
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class TruckRequest {
     private String stateNumber;
     private String brand;
