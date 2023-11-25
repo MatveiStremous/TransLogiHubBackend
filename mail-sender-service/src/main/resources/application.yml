@@ -22,3 +22,5 @@ mail:
   username:
   password:
   port: 587
+  application:
+    name: TransLogiHub
