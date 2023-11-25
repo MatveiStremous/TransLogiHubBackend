@@ -18,6 +18,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Year;
 import java.util.List;
 
 @Entity
@@ -33,6 +34,7 @@ public class Trailer {
     private String brand;
     private String model;
     private String stateNumber;
+    private Year yearOfIssue;
     private Integer maxCargoWeight;
     @Enumerated(EnumType.STRING)
     private TransportStatus status;

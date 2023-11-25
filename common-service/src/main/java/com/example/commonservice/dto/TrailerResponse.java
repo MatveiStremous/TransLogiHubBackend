@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Year;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -13,6 +15,7 @@ import lombok.Setter;
 public class TrailerResponse {
     private Integer id;
     private String stateNumber;
+    private Year yearOfIssue;
     private String brand;
     private String model;
     private Integer maxCargoWeight;
