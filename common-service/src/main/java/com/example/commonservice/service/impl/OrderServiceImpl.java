@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,11 +40,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse getById(Integer orderId) {
-        Optional<Order> optionalOrder = orderRepository.findById(orderId);
-        if (optionalOrder.isEmpty()) {
-            throw new BusinessException(HttpStatus.CONFLICT, ORDER_IS_NOT_EXIST);
-        }
-        return modelMapper.map(optionalOrder.get(), OrderResponse.class);
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, ORDER_IS_NOT_EXIST));
+        return modelMapper.map(order, OrderResponse.class);
     }
 
     @Override

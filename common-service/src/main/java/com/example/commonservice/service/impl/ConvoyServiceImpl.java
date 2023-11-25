@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +55,9 @@ public class ConvoyServiceImpl implements ConvoyService {
 
     @Override
     public ConvoyResponse getById(Integer convoyId) {
-        Optional<Convoy> optionalConvoy = convoyRepository.findById(convoyId);
-        if (optionalConvoy.isEmpty()) {
-            throw new BusinessException(HttpStatus.CONFLICT, CONVOY_IS_NOT_EXIST);
-        }
-        return modelMapper.map(optionalConvoy.get(), ConvoyResponse.class);
+        Convoy convoy = convoyRepository.findById(convoyId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, CONVOY_IS_NOT_EXIST));
+        return modelMapper.map(convoy, ConvoyResponse.class);
     }
 
     @Override

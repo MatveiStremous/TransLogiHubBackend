@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,11 +55,9 @@ public class TrailerTypeServiceImpl implements TrailerTypeService {
 
     @Override
     public TrailerTypeResponse getById(Integer trailerTypeId) {
-        Optional<TrailerType> optionalTrailerType = trailerTypeRepository.findById(trailerTypeId);
-        if (optionalTrailerType.isEmpty()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_IS_NOT_EXIST);
-        }
-        return modelMapper.map(optionalTrailerType.get(), TrailerTypeResponse.class);
+        TrailerType trailerType = trailerTypeRepository.findById(trailerTypeId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_IS_NOT_EXIST));
+        return modelMapper.map(trailerType, TrailerTypeResponse.class);
     }
 
     @Override

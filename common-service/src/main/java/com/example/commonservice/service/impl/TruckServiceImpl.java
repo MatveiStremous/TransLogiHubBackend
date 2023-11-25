@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -68,11 +67,9 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public TruckResponse getById(Integer truckId) {
-        Optional<Truck> optionalTruck = truckRepository.findById(truckId);
-        if (optionalTruck.isEmpty()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRUCK_IS_NOT_EXIST);
-        }
-        return modelMapper.map(optionalTruck.get(), TruckResponse.class);
+        Truck truck = truckRepository.findById(truckId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRUCK_IS_NOT_EXIST));
+        return modelMapper.map(truck, TruckResponse.class);
     }
 
     @Override
