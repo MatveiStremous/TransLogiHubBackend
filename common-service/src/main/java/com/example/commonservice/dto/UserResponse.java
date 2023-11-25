@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserResponse {
+    private Integer id;
     private String login;
     private Role role;
     private Boolean isActive;

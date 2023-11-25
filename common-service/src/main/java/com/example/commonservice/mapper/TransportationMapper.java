@@ -34,11 +34,19 @@ public class TransportationMapper {
         transportation.setWeight(transportationRequest.getWeight());
         transportation.setSpentFuel(transportationRequest.getSpentFuel());
         transportation.setNote(transportationRequest.getNote());
-        transportation.setConvoy(mapper.map(convoyService.getById(transportationRequest.getConvoyId()), Convoy.class));
-        transportation.setDriver(userService.getByLoginWithId(transportationRequest.getDriverLogin()));
-        transportation.setTruck(mapper.map(truckService.getById(transportationRequest.getTruckId()), Truck.class));
-        transportation.setTrailer(mapper.map(trailerService.getById(transportationRequest.getTrailerId()), Trailer.class));
-        transportation.setOrder(mapper.map(orderService.getById(transportationRequest.getOrderId()), Order.class));
+        Convoy convoy = mapper.map(convoyService.getById(transportationRequest.getConvoyId()), Convoy.class);
+        convoy.setId(transportationRequest.getConvoyId());
+        transportation.setConvoy(convoy);
+        transportation.setDriver(userService.getEntityById(transportationRequest.getDriverId()));
+        Truck truck = mapper.map(truckService.getById(transportationRequest.getTruckId()), Truck.class);
+        truck.setId(transportationRequest.getTruckId());
+        transportation.setTruck(truck);
+        Trailer trailer = mapper.map(trailerService.getById(transportationRequest.getTrailerId()), Trailer.class);
+        trailer.setId(transportationRequest.getTrailerId());
+        transportation.setTrailer(trailer);
+        Order order = mapper.map(orderService.getById(transportationRequest.getOrderId()), Order.class);
+        order.setId(transportationRequest.getOrderId());
+        transportation.setOrder(order);
         return transportation;
     }
 }

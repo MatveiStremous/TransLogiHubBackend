@@ -32,4 +32,4 @@ jwt:
 token:
   lifetime:
     in:
-      minutes: 60
+      minutes: 60000

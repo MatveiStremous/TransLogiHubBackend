@@ -9,13 +9,19 @@ import java.util.List;
 public interface UserService {
     List<UserResponse> getAll();
 
-    UserResponse update(String login, UpdateUserRequest updateUserRequest);
+    UserResponse update(String fullJwtToken, UpdateUserRequest updateUserRequest);
 
     UserResponse getByLogin(String login);
 
-    User getByLoginWithId(String login);
+    User getEntityById(Integer id);
 
-    void deleteByLogin(String login);
+    User getEntityByLogin(String login);
 
     List<UserResponse> getAllActive();
+
+    UserResponse getById(Integer userId);
+
+    UserResponse blockUser(Integer userId);
+
+    UserResponse unblockUser(Integer userId);
 }

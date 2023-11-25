@@ -44,7 +44,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public UserResponse signup(SignUpRequest signUpRequest) {
         User user = User.builder()
-                .login(signUpRequest.getLogin())
+                .login(signUpRequest.getLogin().toLowerCase())
                 .password(passwordGenerator.generatePassword())
                 .phone(signUpRequest.getPhone())
                 .firstName(signUpRequest.getFirstName())
@@ -74,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest authRequest) {
-        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(authRequest.getLogin(), authRequest.getPassword());
+        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(authRequest.getLogin().toLowerCase(), authRequest.getPassword());
 
         try {
             authenticationManager.authenticate(authToken);

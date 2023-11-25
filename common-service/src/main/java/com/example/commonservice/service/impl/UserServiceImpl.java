@@ -5,6 +5,7 @@ import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.User;
 import com.example.commonservice.repository.UserRepository;
+import com.example.commonservice.security.JWTUtil;
 import com.example.commonservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -19,9 +20,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final JWTUtil jwtUtil;
 
-    private final String USER_DOES_NOT_EXIST = "User with this login doesn't exist.";
+    private final Integer TOKEN_START_POSITION = 7;
+    private final String USER_DOES_NOT_EXIST_BY_LOGIN = "User with this login doesn't exist.";
+    private final String USER_DOES_NOT_EXIST_BY_ID = "User with this id doesn't exist.";
     private final String USER_IS_ALREADY_BLOCKED = "User is already blocked.";
+    private final String USER_IS_NOT_ALREADY_BLOCKED = "User is not already blocked.";
 
     @Override
     public List<UserResponse> getAll() {
@@ -32,8 +37,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse update(String login, UpdateUserRequest updateUserRequest) {
-        User userFromDb = getUserEntityByLogin(login);
+    public UserResponse update(String fullJwtToken, UpdateUserRequest updateUserRequest) {
+        String token = fullJwtToken.substring(TOKEN_START_POSITION);
+        String login = jwtUtil.getClaimFromToken(token, "login");
+        User userFromDb = getEntityByLogin(login);
         userFromDb.setPhone(updateUserRequest.getPhone());
         userFromDb.setFirstName(updateUserRequest.getFirstName());
         userFromDb.setLastName(updateUserRequest.getLastName());
@@ -44,26 +51,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse getByLogin(String login) {
-        User user = userRepository.findByLogin(login)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
-        return modelMapper.map(user, UserResponse.class);
+        return modelMapper.map(getEntityByLogin(login.toLowerCase()), UserResponse.class);
     }
 
     @Override
-    public User getByLoginWithId(String login) {
+    public UserResponse getById(Integer id) {
+        return modelMapper.map(getEntityById(id), UserResponse.class);
+    }
+
+    @Override
+    public User getEntityById(Integer id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST_BY_ID));
+    }
+
+    @Override
+    public User getEntityByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
-    }
-
-    @Override
-    public void deleteByLogin(String login) {
-        User userFromDb = getUserEntityByLogin(login);
-        if (!userFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, USER_IS_ALREADY_BLOCKED);
-        } else {
-            userFromDb.setIsActive(false);
-            userRepository.save(userFromDb);
-        }
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST_BY_LOGIN));
     }
 
     @Override
@@ -74,8 +79,27 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    private User getUserEntityByLogin(String login) {
-        return userRepository.findByLogin(login)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
+    @Override
+    public UserResponse blockUser(Integer userId) {
+        User userFromDb = getEntityById(userId);
+        if (!userFromDb.getIsActive()) {
+            throw new BusinessException(HttpStatus.CONFLICT, USER_IS_ALREADY_BLOCKED);
+        } else {
+            userFromDb.setIsActive(false);
+            User updatedUser = userRepository.save(userFromDb);
+            return modelMapper.map(updatedUser, UserResponse.class);
+        }
+    }
+
+    @Override
+    public UserResponse unblockUser(Integer userId) {
+        User userFromDb = getEntityById(userId);
+        if (userFromDb.getIsActive()) {
+            throw new BusinessException(HttpStatus.CONFLICT, USER_IS_NOT_ALREADY_BLOCKED);
+        } else {
+            userFromDb.setIsActive(true);
+            User updatedUser = userRepository.save(userFromDb);
+            return modelMapper.map(updatedUser, UserResponse.class);
+        }
     }
 }
