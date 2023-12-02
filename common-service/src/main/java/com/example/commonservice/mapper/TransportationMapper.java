@@ -6,8 +6,8 @@ import com.example.commonservice.model.Order;
 import com.example.commonservice.model.Trailer;
 import com.example.commonservice.model.Transportation;
 import com.example.commonservice.model.Truck;
+import com.example.commonservice.repository.OrderRepository;
 import com.example.commonservice.service.ConvoyService;
-import com.example.commonservice.service.OrderService;
 import com.example.commonservice.service.TrailerService;
 import com.example.commonservice.service.TruckService;
 import com.example.commonservice.service.UserService;
@@ -23,7 +23,7 @@ public class TransportationMapper {
     private final UserService userService;
     private final TruckService truckService;
     private final TrailerService trailerService;
-    private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     public Transportation map(TransportationRequest transportationRequest) {
         Transportation transportation = new Transportation();
@@ -34,19 +34,28 @@ public class TransportationMapper {
         transportation.setWeight(transportationRequest.getWeight());
         transportation.setSpentFuel(transportationRequest.getSpentFuel());
         transportation.setNote(transportationRequest.getNote());
-        Convoy convoy = mapper.map(convoyService.getById(transportationRequest.getConvoyId()), Convoy.class);
-        convoy.setId(transportationRequest.getConvoyId());
-        transportation.setConvoy(convoy);
-        transportation.setDriver(userService.getEntityById(transportationRequest.getDriverId()));
-        Truck truck = mapper.map(truckService.getById(transportationRequest.getTruckId()), Truck.class);
-        truck.setId(transportationRequest.getTruckId());
-        transportation.setTruck(truck);
-        Trailer trailer = mapper.map(trailerService.getById(transportationRequest.getTrailerId()), Trailer.class);
-        trailer.setId(transportationRequest.getTrailerId());
-        transportation.setTrailer(trailer);
-        Order order = mapper.map(orderService.getById(transportationRequest.getOrderId()), Order.class);
-        order.setId(transportationRequest.getOrderId());
-        transportation.setOrder(order);
+        if (transportationRequest.getConvoyId() != null) {
+            Convoy convoy = mapper.map(convoyService.getById(transportationRequest.getConvoyId()), Convoy.class);
+            convoy.setId(transportationRequest.getConvoyId());
+            transportation.setConvoy(convoy);
+        }
+        if (transportationRequest.getDriverId() != null) {
+            transportation.setDriver(userService.getEntityById(transportationRequest.getDriverId()));
+        }
+        if (transportationRequest.getTruckId() != null) {
+            Truck truck = mapper.map(truckService.getById(transportationRequest.getTruckId()), Truck.class);
+            truck.setId(transportationRequest.getTruckId());
+            transportation.setTruck(truck);
+        }
+        if (transportationRequest.getTruckId() != null) {
+            Trailer trailer = mapper.map(trailerService.getById(transportationRequest.getTrailerId()), Trailer.class);
+            trailer.setId(transportationRequest.getTrailerId());
+            transportation.setTrailer(trailer);
+        }
+        if (transportationRequest.getOrderId() != null) {
+            Order order = orderRepository.findById(transportationRequest.getOrderId()).orElse(null);
+            transportation.setOrder(order);
+        }
         return transportation;
     }
 }

@@ -1,5 +1,7 @@
 package com.example.commonservice.controller;
 
+import com.example.commonservice.dto.OrderDivideRequest;
+import com.example.commonservice.dto.OrderDivideResponse;
 import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.OrderResponse;
 import com.example.commonservice.service.OrderService;
@@ -37,7 +39,13 @@ public class OrderController {
 
     @PutMapping("{orderId}")
     public OrderResponse updateOrder(@PathVariable Integer orderId,
-                                                 @RequestBody OrderRequest orderRequest) {
+                                     @RequestBody OrderRequest orderRequest) {
         return orderService.updateById(orderId, orderRequest);
+    }
+
+    @PostMapping("/divide/{orderId}")
+    public OrderDivideResponse divideOrder(@PathVariable Integer orderId,
+                                           @RequestBody OrderDivideRequest orderDivideRequest) {
+        return orderService.divideIntoTransportation(orderId, orderDivideRequest);
     }
 }

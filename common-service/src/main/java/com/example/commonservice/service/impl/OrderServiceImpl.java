@@ -1,12 +1,17 @@
 package com.example.commonservice.service.impl;
 
+import com.example.commonservice.dto.OrderDivideRequest;
+import com.example.commonservice.dto.OrderDivideResponse;
 import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.OrderResponse;
+import com.example.commonservice.dto.TransportationRequest;
+import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Order;
 import com.example.commonservice.model.enums.OrderStatus;
 import com.example.commonservice.repository.OrderRepository;
 import com.example.commonservice.service.OrderService;
+import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
@@ -19,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
+    private final TransportationService transportationService;
     private final ModelMapper modelMapper;
     private final String ORDER_IS_NOT_EXIST = "Order with this id is not exist.";
 
@@ -53,5 +59,25 @@ public class OrderServiceImpl implements OrderService {
         orderForUpdate.setStatus(orderFromDb.getStatus());
         Order updatedOrder = orderRepository.save(orderForUpdate);
         return modelMapper.map(updatedOrder, OrderResponse.class);
+    }
+
+    @Override
+    public OrderDivideResponse divideIntoTransportation(Integer orderId, OrderDivideRequest orderDivideRequest) {
+        orderDivideRequest.getTransportations().stream()
+                .map(t -> TransportationRequest.builder()
+                        .weight(t.getWeight())
+                        .orderId(orderId)
+                        .build())
+                .forEach(transportationService::add);
+        return OrderDivideResponse.builder()
+                .transportations(getEntityById(orderId).getTransportations().stream()
+                        .map((t) -> modelMapper.map(t, TransportationResponse.class))
+                        .toList())
+                .build();
+    }
+
+    public Order getEntityById(Integer orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, ORDER_IS_NOT_EXIST));
     }
 }
