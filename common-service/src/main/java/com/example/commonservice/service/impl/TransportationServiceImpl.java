@@ -41,6 +41,14 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     @Override
+    public List<TransportationResponse> getAllByOrderId(Integer orderId) {
+        return transportationRepository.findAllByOrderId(orderId, Sort.by(Sort.Direction.DESC, "id"))
+                .stream()
+                .map(transportation -> modelMapper.map(transportation, TransportationResponse.class))
+                .toList();
+    }
+
+    @Override
     public TransportationResponse getById(Integer transportationId) {
         Transportation transportation = transportationRepository.findById(transportationId)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRANSPORTATION_IS_NOT_EXIST));

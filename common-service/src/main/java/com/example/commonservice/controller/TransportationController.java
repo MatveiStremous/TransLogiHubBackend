@@ -35,6 +35,11 @@ public class TransportationController {
         return transportationService.getById(transportationId);
     }
 
+    @GetMapping("/order/{orderId}")
+    public List<TransportationResponse> getAllTransportationsByOrderId(@PathVariable Integer orderId) {
+        return transportationService.getAllByOrderId(orderId);
+    }
+
     @PutMapping("{transportationId}")
     public TransportationResponse updateTransportation(@PathVariable Integer transportationId,
                                                  @RequestBody TransportationRequest transportationRequest) {
