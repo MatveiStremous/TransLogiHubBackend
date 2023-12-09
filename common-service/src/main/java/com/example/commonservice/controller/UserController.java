@@ -5,6 +5,7 @@ import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -39,6 +40,12 @@ public class UserController {
     public UserResponse updateUser(@RequestHeader("Authorization") String fullToken,
                                    @RequestBody UpdateUserRequest updateUserRequest) {
         return userService.update(fullToken, updateUserRequest);
+    }
+
+    @PutMapping("{userId}")
+    public UserResponse updateUserById(@PathVariable Integer userId,
+                                   @RequestBody UpdateUserRequest updateUserRequest) {
+        return userService.updateById(userId, updateUserRequest);
     }
 
     @GetMapping("/login")

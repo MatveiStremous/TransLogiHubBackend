@@ -50,6 +50,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse updateById(Integer userId, UpdateUserRequest updateUserRequest) {
+        User userFromDb = getEntityById(userId);
+        userFromDb.setPhone(updateUserRequest.getPhone());
+        userFromDb.setFirstName(updateUserRequest.getFirstName());
+        userFromDb.setLastName(updateUserRequest.getLastName());
+        userFromDb.setMiddleName(updateUserRequest.getMiddleName());
+        User updatedUser = userRepository.save(userFromDb);
+        return modelMapper.map(updatedUser, UserResponse.class);
+    }
+
+    @Override
     public UserResponse getByLogin(String login) {
         return modelMapper.map(getEntityByLogin(login.toLowerCase()), UserResponse.class);
     }

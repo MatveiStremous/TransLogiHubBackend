@@ -11,6 +11,8 @@ public interface UserService {
 
     UserResponse update(String fullJwtToken, UpdateUserRequest updateUserRequest);
 
+    UserResponse updateById(Integer userId, UpdateUserRequest updateUserRequest);
+
     UserResponse getByLogin(String login);
 
     User getEntityById(Integer id);
