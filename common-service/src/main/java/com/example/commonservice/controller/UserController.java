@@ -42,7 +42,7 @@ public class UserController {
         return userService.update(fullToken, updateUserRequest);
     }
 
-    @PutMapping("{userId}")
+    @PutMapping("/{userId}")
     public UserResponse updateUserById(@PathVariable Integer userId,
                                    @RequestBody UpdateUserRequest updateUserRequest) {
         return userService.updateById(userId, updateUserRequest);
@@ -53,8 +53,8 @@ public class UserController {
         return userService.getByLogin(login);
     }
 
-    @GetMapping("/id")
-    public UserResponse getUserByLogin(@RequestParam Integer userId) {
+    @GetMapping("/{userId}")
+    public UserResponse getUserByLogin(@PathVariable Integer userId) {
         return userService.getById(userId);
     }
 
