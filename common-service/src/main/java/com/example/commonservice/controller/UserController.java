@@ -58,13 +58,13 @@ public class UserController {
         return userService.getById(userId);
     }
 
-    @PutMapping("/block")
-    public UserResponse blockUser(@RequestParam Integer userId) {
+    @PutMapping("/block/{userId}")
+    public UserResponse blockUser(@PathVariable Integer userId) {
         return userService.blockUser(userId);
     }
 
-    @PutMapping("/unblock")
-    public UserResponse unblockUser(@RequestParam Integer userId) {
+    @PutMapping("/unblock/{userId}")
+    public UserResponse unblockUser(@PathVariable Integer userId) {
         return userService.unblockUser(userId);
     }
 }
