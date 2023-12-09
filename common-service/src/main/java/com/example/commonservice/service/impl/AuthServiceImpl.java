@@ -36,10 +36,6 @@ public class AuthServiceImpl implements AuthService {
     private final ModelMapper modelMapper;
     private final AuthenticationManager authenticationManager;
     private final Integer TOKEN_START_POSITION = 7;
-    private final String LOGIN_ALREADY_REGISTERED = "This login is already registered.";
-    private final String WRONG_LOGIN_OR_PASSWORD = "Wrong login or password.";
-    private final String WRONG_OLD_PASSWORD = "Wrong old password.";
-    private final String USER_DOES_NOT_EXIST = "User with this login doesn't exist.";
 
     @Override
     public UserResponse signup(SignUpRequest signUpRequest) {
@@ -68,7 +64,7 @@ public class AuthServiceImpl implements AuthService {
 
             return modelMapper.map(savedUser, UserResponse.class);
         } else {
-            throw new BusinessException(HttpStatus.CONFLICT, LOGIN_ALREADY_REGISTERED);
+            throw new BusinessException(HttpStatus.CONFLICT, "AUTH-2");
         }
     }
 
@@ -79,10 +75,10 @@ public class AuthServiceImpl implements AuthService {
         try {
             authenticationManager.authenticate(authToken);
         } catch (BadCredentialsException e) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, WRONG_LOGIN_OR_PASSWORD);
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "AUTH-1");
         }
         User user = authUserService.findByLogin(authRequest.getLogin())
-                .orElseThrow(() -> new BusinessException(HttpStatus.UNAUTHORIZED, WRONG_LOGIN_OR_PASSWORD));
+                .orElseThrow(() -> new BusinessException(HttpStatus.UNAUTHORIZED, "AUTH-1"));
 
         String token = jwtUtil.generateAccessToken(user);
         return new AuthResponse(authRequest.getLogin(), token);
@@ -93,14 +89,14 @@ public class AuthServiceImpl implements AuthService {
         String token = fullJwtToken.substring(TOKEN_START_POSITION);
         String login = jwtUtil.getClaimFromToken(token, "login");
         User user = authUserService.findByLogin(login)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, USER_DOES_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "USER-1"));
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(user.getLogin(), changePasswordRequest.getOldPassword());
         try {
             authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
-            throw new BusinessException(HttpStatus.CONFLICT, WRONG_OLD_PASSWORD);
+            throw new BusinessException(HttpStatus.CONFLICT, "AUTH-3");
         }
         user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
         authUserService.update(user.getId(), user);

@@ -19,10 +19,6 @@ import java.util.List;
 public class TrailerTypeServiceImpl implements TrailerTypeService {
     private final TrailerTypeRepository trailerTypeRepository;
     private final ModelMapper modelMapper;
-    private final String TRAILER_TYPE_NAME_ALREADY_EXISTS = "Trailer type name already exists.";
-    private final String TRAILER_TYPE_NAME_ALREADY_EXISTS_BUT_NOT_ACTIVE = "Trailer type name already exists but not active now.";
-    private final String TRAILER_TYPE_IS_NOT_EXIST = "Trailer type with this id is not exist.";
-    private final String TRAILER_TYPE_ALREADY_NOT_ACTIVE = "This trailer type is already not active.";
 
     @Override
     public TrailerTypeResponse add(TrailerTypeRequest trailerTypeRequest) {
@@ -56,7 +52,7 @@ public class TrailerTypeServiceImpl implements TrailerTypeService {
     @Override
     public TrailerTypeResponse getById(Integer trailerTypeId) {
         TrailerType trailerType = trailerTypeRepository.findById(trailerTypeId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRAILER-TYPE-3"));
         return modelMapper.map(trailerType, TrailerTypeResponse.class);
     }
 
@@ -67,7 +63,7 @@ public class TrailerTypeServiceImpl implements TrailerTypeService {
             if (trailerTypeRepository.findByNameAndIsActiveFalse(trailerTypeRequest.getName()).isEmpty()) {
                 checkIfNameInUse(trailerTypeRequest.getName());
             } else {
-                throw new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_NAME_ALREADY_EXISTS_BUT_NOT_ACTIVE);
+                throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-TYPE-2");
             }
         } else {
             return trailerTypeFromDb;
@@ -83,7 +79,7 @@ public class TrailerTypeServiceImpl implements TrailerTypeService {
     public void deleteById(Integer trailerTypeId) {
         TrailerTypeResponse trailerTypeFromDb = getById(trailerTypeId);
         if (!trailerTypeFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_ALREADY_NOT_ACTIVE);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-TYPE-4");
         } else {
             trailerTypeFromDb.setIsActive(false);
             trailerTypeRepository.save(modelMapper.map(trailerTypeFromDb, TrailerType.class));
@@ -92,7 +88,7 @@ public class TrailerTypeServiceImpl implements TrailerTypeService {
 
     private void checkIfNameInUse(String name) {
         if (trailerTypeRepository.findByName(name).isPresent()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRAILER_TYPE_NAME_ALREADY_EXISTS);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-TYPE-1");
         }
     }
 }

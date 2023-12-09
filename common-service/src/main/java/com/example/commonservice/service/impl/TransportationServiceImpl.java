@@ -22,7 +22,6 @@ public class TransportationServiceImpl implements TransportationService {
     private final TransportationRepository transportationRepository;
     private final ModelMapper modelMapper;
     private final TransportationMapper transportationMapper;
-    private final String TRANSPORTATION_IS_NOT_EXIST = "Transportation with this id is not exist.";
 
     @Override
     public TransportationResponse add(TransportationRequest transportationRequest) {
@@ -51,7 +50,7 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public TransportationResponse getById(Integer transportationId) {
         Transportation transportation = transportationRepository.findById(transportationId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRANSPORTATION_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-1"));
         return modelMapper.map(transportation, TransportationResponse.class);
     }
 

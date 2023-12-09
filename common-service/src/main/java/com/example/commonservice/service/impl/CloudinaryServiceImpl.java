@@ -19,8 +19,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CloudinaryServiceImpl implements CloudinaryService {
     private final Cloudinary cloudinary;
-    private final String UPLOAD_FILE_ERROR = "Can't upload file.";
-    private final String DELETE_FILE_ERROR = "Can't delete file.";
 
     @Override
     public String upload(MultipartFile fileToUpload, String folderName) {
@@ -31,7 +29,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
             file.delete();
             return imageUrl;
         } catch (IOException e) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, UPLOAD_FILE_ERROR);
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "DOC-1");
         }
     }
 
@@ -40,7 +38,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         try {
             cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("invalidate", true));
         } catch (Exception e) {
-            throw new BusinessException(HttpStatus.BAD_REQUEST, DELETE_FILE_ERROR);
+            throw new BusinessException(HttpStatus.BAD_REQUEST, "DOC-2");
         }
     }
 

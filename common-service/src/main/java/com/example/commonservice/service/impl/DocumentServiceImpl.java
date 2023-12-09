@@ -22,8 +22,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final CloudinaryService cloudinaryService;
     private final DocumentRepository documentRepository;
     private final ModelMapper modelMapper;
-    private final String DOCUMENT_DOES_NOT_EXIST = "Document with this id doesn't exist.";
-    private final String DOCUMENT_ALREADY_NOT_ACTIVE = "This document is already not active.";
 
     @Override
     public DocumentResponse add(MultipartFile multipartFile, DocumentRequest documentRequest) {
@@ -43,7 +41,7 @@ public class DocumentServiceImpl implements DocumentService {
     public void deleteById(Integer documentId) {
         Document documentFromDb = getById(documentId);
         if (!documentFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, DOCUMENT_ALREADY_NOT_ACTIVE);
+            throw new BusinessException(HttpStatus.CONFLICT, "DOC-4");
         } else {
             documentFromDb.setIsActive(false);
             documentRepository.save(documentFromDb);
@@ -60,6 +58,6 @@ public class DocumentServiceImpl implements DocumentService {
 
     private Document getById(Integer id) {
         return documentRepository.findById(id)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, DOCUMENT_DOES_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "DOC-3"));
     }
 }

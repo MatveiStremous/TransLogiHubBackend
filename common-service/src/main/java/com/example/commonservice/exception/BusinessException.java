@@ -10,6 +10,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public class BusinessException extends RuntimeException {
     private HttpStatus httpStatus;
-    private String message;
+    private String errorCode;
 }
 

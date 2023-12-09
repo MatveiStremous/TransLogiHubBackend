@@ -26,7 +26,6 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final TransportationService transportationService;
     private final ModelMapper modelMapper;
-    private final String ORDER_IS_NOT_EXIST = "Order with this id is not exist.";
 
     @Override
     public OrderResponse add(OrderRequest orderRequest) {
@@ -47,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse getById(Integer orderId) {
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, ORDER_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "ORDER-1"));
         return modelMapper.map(order, OrderResponse.class);
     }
 
@@ -78,6 +77,6 @@ public class OrderServiceImpl implements OrderService {
 
     public Order getEntityById(Integer orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, ORDER_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "ORDER-1"));
     }
 }

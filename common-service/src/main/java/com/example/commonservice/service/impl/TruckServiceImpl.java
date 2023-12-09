@@ -20,9 +20,6 @@ import java.util.List;
 public class TruckServiceImpl implements TruckService {
     private final TruckRepository truckRepository;
     private final ModelMapper modelMapper;
-    private final String STATE_NUMBER_ALREADY_IN_USE = "This state number is already in use.";
-    private final String TRUCK_IS_NOT_EXIST = "Truck with this id is not exist.";
-    private final String TRUCK_ALREADY_NOT_ACTIVE = "This truck is already not active.";
 
     @Override
     public TruckResponse add(TruckRequest truckRequest) {
@@ -68,7 +65,7 @@ public class TruckServiceImpl implements TruckService {
     @Override
     public TruckResponse getById(Integer truckId) {
         Truck truck = truckRepository.findById(truckId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRUCK_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRUCK-2"));
         return modelMapper.map(truck, TruckResponse.class);
     }
 
@@ -76,7 +73,7 @@ public class TruckServiceImpl implements TruckService {
     public void deleteById(Integer truckId) {
         TruckResponse truckFromDb = getById(truckId);
         if (!truckFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRUCK_ALREADY_NOT_ACTIVE);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRUCK-3");
         } else {
             truckFromDb.setIsActive(false);
             truckRepository.save(modelMapper.map(truckFromDb, Truck.class));
@@ -85,7 +82,7 @@ public class TruckServiceImpl implements TruckService {
 
     private void checkIfStateNumberInUse(String stateNumber) {
         if (truckRepository.findByStateNumberAndIsActiveTrue(stateNumber).isPresent()) {
-            throw new BusinessException(HttpStatus.CONFLICT, STATE_NUMBER_ALREADY_IN_USE);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRUCK-1");
         }
     }
 }

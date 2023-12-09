@@ -12,11 +12,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
-    private String message;
+    private String userMessage;
+    private String backendCode;
     private long timestamp;
 
-    public ErrorResponse(String message) {
-        this.message = message;
+    public ErrorResponse(String backendCode, String userMessage) {
+        this.userMessage = userMessage;
+        this.backendCode = backendCode;
         timestamp = System.currentTimeMillis();
     }
 }

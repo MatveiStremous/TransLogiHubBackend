@@ -23,9 +23,6 @@ public class TrailerServiceImpl implements TrailerService {
     private final TrailerRepository trailerRepository;
     private final TrailerTypeService trailerTypeService;
     private final ModelMapper modelMapper;
-    private final String STATE_NUMBER_ALREADY_IN_USE = "This state number is already in use.";
-    private final String TRAILER_IS_NOT_EXIST = "Trailer with this id is not exist.";
-    private final String TRAILER_ALREADY_NOT_ACTIVE = "This trailer is already not active.";
 
     @Override
     public TrailerResponse add(TrailerRequest trailerRequest) {
@@ -73,7 +70,7 @@ public class TrailerServiceImpl implements TrailerService {
     @Override
     public TrailerResponse getById(Integer trailerId) {
         Trailer trailer = trailerRepository.findById(trailerId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, TRAILER_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRAILER-2"));
         return modelMapper.map(trailer, TrailerResponse.class);
     }
 
@@ -81,7 +78,7 @@ public class TrailerServiceImpl implements TrailerService {
     public void deleteById(Integer trailerId) {
         TrailerResponse trailerFromDb = getById(trailerId);
         if (!trailerFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, TRAILER_ALREADY_NOT_ACTIVE);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-3");
         } else {
             trailerFromDb.setIsActive(false);
             trailerRepository.save(modelMapper.map(trailerFromDb, Trailer.class));
@@ -90,7 +87,7 @@ public class TrailerServiceImpl implements TrailerService {
 
     private void checkIfStateNumberInUse(String stateNumber) {
         if (trailerRepository.findByStateNumberAndIsActiveTrue(stateNumber).isPresent()) {
-            throw new BusinessException(HttpStatus.CONFLICT, STATE_NUMBER_ALREADY_IN_USE);
+            throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-1");
         }
     }
 }

@@ -19,10 +19,6 @@ import java.util.List;
 public class ConvoyServiceImpl implements ConvoyService {
     private final ConvoyRepository convoyRepository;
     private final ModelMapper modelMapper;
-    private final String CONVOY_NAME_ALREADY_EXISTS = "Convoy name already exists.";
-    private final String CONVOY_NAME_ALREADY_EXISTS_BUT_NOT_ACTIVE = "Convoy name already exists but not active now.";
-    private final String CONVOY_IS_NOT_EXIST = "Convoy with this id is not exist.";
-    private final String CONVOY_ALREADY_NOT_ACTIVE = "This convoy is already not active.";
 
     @Override
     public ConvoyResponse add(ConvoyRequest convoyRequest) {
@@ -56,7 +52,7 @@ public class ConvoyServiceImpl implements ConvoyService {
     @Override
     public ConvoyResponse getById(Integer convoyId) {
         Convoy convoy = convoyRepository.findById(convoyId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, CONVOY_IS_NOT_EXIST));
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "CONVOY-3"));
         return modelMapper.map(convoy, ConvoyResponse.class);
     }
 
@@ -67,7 +63,7 @@ public class ConvoyServiceImpl implements ConvoyService {
             if (convoyRepository.findByNameAndIsActiveFalse(convoyRequest.getName()).isEmpty()) {
                 checkIfNameInUse(convoyRequest.getName());
             } else {
-                throw new BusinessException(HttpStatus.CONFLICT, CONVOY_NAME_ALREADY_EXISTS_BUT_NOT_ACTIVE);
+                throw new BusinessException(HttpStatus.CONFLICT, "CONVOY-2");
             }
         } else {
             return convoyFromDb;
@@ -83,7 +79,7 @@ public class ConvoyServiceImpl implements ConvoyService {
     public void deleteById(Integer convoyId) {
         ConvoyResponse convoyFromDb = getById(convoyId);
         if (!convoyFromDb.getIsActive()) {
-            throw new BusinessException(HttpStatus.CONFLICT, CONVOY_ALREADY_NOT_ACTIVE);
+            throw new BusinessException(HttpStatus.CONFLICT, "CONVOY-4");
         } else {
             convoyFromDb.setIsActive(false);
             convoyRepository.save(modelMapper.map(convoyFromDb, Convoy.class));
@@ -92,7 +88,7 @@ public class ConvoyServiceImpl implements ConvoyService {
 
     private void checkIfNameInUse(String name) {
         if (convoyRepository.findByName(name).isPresent()) {
-            throw new BusinessException(HttpStatus.CONFLICT, CONVOY_NAME_ALREADY_EXISTS);
+            throw new BusinessException(HttpStatus.CONFLICT, "CONVOY-1");
         }
     }
 }
