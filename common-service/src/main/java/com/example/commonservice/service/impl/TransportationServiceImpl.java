@@ -6,8 +6,10 @@ import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.mapper.TransportationMapper;
 import com.example.commonservice.model.Transportation;
+import com.example.commonservice.model.enums.HistoryType;
 import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.repository.TransportationRepository;
+import com.example.commonservice.service.HistoryService;
 import com.example.commonservice.service.TransportationService;
 import com.example.commonservice.util.PdfGenerator;
 import lombok.RequiredArgsConstructor;
@@ -23,12 +25,15 @@ import java.util.List;
 public class TransportationServiceImpl implements TransportationService {
     private final TransportationRepository transportationRepository;
     private final TransportationMapper transportationMapper;
+    private final HistoryService historyService;
 
     @Override
     public TransportationResponse add(TransportationRequest transportationRequest) {
         Transportation newTransportation = transportationMapper.mapToEntity(transportationRequest);
         newTransportation.setStatus(TransportationStatus.FORMED);
         newTransportation = transportationRepository.save(newTransportation);
+        addToHistory(newTransportation.getId(), "Грузоперевозка создана");
+        addToOrderHistory(transportationRequest.getOrderId(), "Добавлена грузоперевозка №" + newTransportation.getId());
         return transportationMapper.mapToResponse(newTransportation);
     }
 
@@ -60,6 +65,7 @@ public class TransportationServiceImpl implements TransportationService {
         transportationForUpdate.setId(transportationId);
         transportationForUpdate.setStatus(transportationFromDb.getStatus());
         Transportation updatedTransportation = transportationRepository.save(transportationForUpdate);
+        addToHistory(transportationId, "Грузоперевозка обновлена");
         return transportationMapper.mapToResponse(updatedTransportation);
     }
 
@@ -73,6 +79,7 @@ public class TransportationServiceImpl implements TransportationService {
         Transportation transportation = getEntityById(transportationId);
         transportation.setDriverId(driverId);
         transportation = transportationRepository.save(transportation);
+        addToHistory(transportationId, "Назначен водитель");
         return transportationMapper.mapToResponse(transportation);
     }
 
@@ -81,6 +88,7 @@ public class TransportationServiceImpl implements TransportationService {
         Transportation transportation = getEntityById(transportationId);
         transportation.setTrailerId(trailerId);
         transportation = transportationRepository.save(transportation);
+        addToHistory(transportationId, "Назначен прицеп");
         return transportationMapper.mapToResponse(transportation);
     }
 
@@ -89,6 +97,7 @@ public class TransportationServiceImpl implements TransportationService {
         Transportation transportation = getEntityById(transportationId);
         transportation.setTruckId(truckId);
         transportation = transportationRepository.save(transportation);
+        addToHistory(transportationId, "Назначен грузовик");
         return transportationMapper.mapToResponse(transportation);
     }
 
@@ -97,6 +106,9 @@ public class TransportationServiceImpl implements TransportationService {
         Transportation transportation = getEntityById(transportationId);
         transportation.setConvoyId(convoyId);
         transportation = transportationRepository.save(transportation);
+        addToHistory(transportationId, "Назначена колонна");
+        addToOrderHistory(transportation.getOrderId(), "Грузоперевозка №" + transportationId + " назначена на колонну №" + convoyId);
+
         return transportationMapper.mapToResponse(transportation);
     }
 
@@ -105,11 +117,20 @@ public class TransportationServiceImpl implements TransportationService {
         Transportation transportation = getEntityById(transportationId);
         transportation.setStatus(status);
         transportation = transportationRepository.save(transportation);
+        addToHistory(transportationId, "Статус сменён на " + status);
         return transportationMapper.mapToResponse(transportation);
     }
 
     private Transportation getEntityById(Integer id) {
         return transportationRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-1"));
+    }
+
+    private void addToHistory(Integer entityId, String message) {
+        historyService.add(entityId, HistoryType.TRANSPORTATION, message);
+    }
+
+    private void addToOrderHistory(Integer entityId, String message) {
+        historyService.add(entityId, HistoryType.ORDER, message);
     }
 }

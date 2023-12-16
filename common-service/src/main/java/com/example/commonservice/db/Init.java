@@ -38,7 +38,7 @@ public class Init {
         initTrailerTypes();
         initTrailers();
         initTrucks();
-        initOrders();
+        //initOrders();
         initUsers();
     }
 

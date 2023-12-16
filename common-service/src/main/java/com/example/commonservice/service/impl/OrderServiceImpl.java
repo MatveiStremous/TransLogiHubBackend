@@ -7,8 +7,10 @@ import com.example.commonservice.dto.OrderResponse;
 import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Order;
+import com.example.commonservice.model.enums.HistoryType;
 import com.example.commonservice.model.enums.OrderStatus;
 import com.example.commonservice.repository.OrderRepository;
+import com.example.commonservice.service.HistoryService;
 import com.example.commonservice.service.OrderService;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final TransportationService transportationService;
+    private final HistoryService historyService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -31,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
         Order newOrder = modelMapper.map(orderRequest, Order.class);
         newOrder.setStatus(OrderStatus.FORMED);
         newOrder = orderRepository.save(newOrder);
+        addToHistory(newOrder.getId(), "Заказ создан");
         return modelMapper.map(newOrder, OrderResponse.class);
     }
 
@@ -76,5 +80,9 @@ public class OrderServiceImpl implements OrderService {
     public Order getEntityById(Integer orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "ORDER-1"));
+    }
+
+    private void addToHistory(Integer entityId, String message) {
+        historyService.add(entityId, HistoryType.ORDER, message);
     }
 }

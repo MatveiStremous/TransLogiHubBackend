@@ -7,7 +7,11 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.commonservice.model.User;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -55,5 +59,20 @@ public class JWTUtil {
                 .withClaim("isActive", true)
                 .build();
         verifier.verify(token);
+    }
+
+    public String getClaimFromToken(String claimName) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes != null) {
+            String authorizationHeader = attributes.getRequest().getHeader("Authorization");
+
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                String jwtToken = authorizationHeader.substring(7);
+                DecodedJWT decodedJWT = JWT.decode(jwtToken);
+                return decodedJWT.getClaim(claimName).asString();
+            }
+        }
+        return null;
     }
 }
