@@ -7,13 +7,11 @@ import com.example.commonservice.dto.TrailerTypeRequest;
 import com.example.commonservice.dto.TruckRequest;
 import com.example.commonservice.model.User;
 import com.example.commonservice.model.enums.Role;
-import com.example.commonservice.service.AuthService;
 import com.example.commonservice.service.AuthUserService;
 import com.example.commonservice.service.ConvoyService;
 import com.example.commonservice.service.OrderService;
 import com.example.commonservice.service.TrailerService;
 import com.example.commonservice.service.TrailerTypeService;
-import com.example.commonservice.service.TransportationService;
 import com.example.commonservice.service.TruckService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -26,22 +24,20 @@ import java.time.Year;
 @Component
 @RequiredArgsConstructor
 public class Init {
-    private final AuthService authService;
     private final TrailerTypeService trailerTypeService;
     private final TrailerService trailerService;
     private final TruckService truckService;
     private final OrderService orderService;
-    private final TransportationService transportationService;
     private final ConvoyService convoyService;
     private final AuthUserService authUserService;
     private final PasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void initDb() {
+        initConvoys();
         initTrailerTypes();
         initTrailers();
         initTrucks();
-        initConvoys();
         initOrders();
         initUsers();
     }
@@ -102,7 +98,7 @@ public class Init {
 
     private void initTrailers() {
         trailerService.add(TrailerRequest.builder()
-                .typeId(1)
+                .trailerTypeId(1)
                 .model("Schmitz")
                 .brand("9084")
                 .maxCargoWeight(25000)
@@ -110,9 +106,10 @@ public class Init {
                 .yearOfIssue(Year.of(2019))
                 .weight(7500)
                 .note("-")
+                .convoyId(1)
                 .build());
         trailerService.add(TrailerRequest.builder()
-                .typeId(1)
+                .trailerTypeId(1)
                 .model("Schmitz")
                 .brand("SCS BSEB")
                 .maxCargoWeight(24000)
@@ -120,9 +117,10 @@ public class Init {
                 .yearOfIssue(Year.of(2019))
                 .weight(7300)
                 .note("Примечаний нет")
+                .convoyId(1)
                 .build());
         trailerService.add(TrailerRequest.builder()
-                .typeId(2)
+                .trailerTypeId(2)
                 .model("Schmitz")
                 .brand("9076")
                 .maxCargoWeight(22000)
@@ -130,9 +128,10 @@ public class Init {
                 .yearOfIssue(Year.of(2015))
                 .weight(7900)
                 .note("-")
+                .convoyId(1)
                 .build());
         trailerService.add(TrailerRequest.builder()
-                .typeId(4)
+                .trailerTypeId(4)
                 .model("Krone")
                 .brand("SD")
                 .maxCargoWeight(21500)
@@ -140,6 +139,7 @@ public class Init {
                 .yearOfIssue(Year.of(2021))
                 .weight(8100)
                 .note("-")
+                .convoyId(1)
                 .build());
     }
 

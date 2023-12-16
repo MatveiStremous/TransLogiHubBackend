@@ -38,6 +38,7 @@ public class Order {
     private String arrivalAddress;
     private LocalDateTime loadingDate;
     private LocalDateTime unloadingDate;
+    private String clientEmail;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     private String note;

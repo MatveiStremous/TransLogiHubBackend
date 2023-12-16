@@ -1,5 +1,6 @@
 package com.example.commonservice.service;
 
+import com.example.commonservice.dto.TruckInfoResponse;
 import com.example.commonservice.dto.TruckRequest;
 import com.example.commonservice.dto.TruckResponse;
 
@@ -14,7 +15,7 @@ public interface TruckService {
 
     TruckResponse update(Integer id, TruckRequest truckRequest);
 
-    TruckResponse getById(Integer truckId);
+    TruckInfoResponse getById(Integer truckId);
 
     void deleteById(Integer truckId);
 }

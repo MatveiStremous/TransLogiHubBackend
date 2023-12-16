@@ -1,6 +1,7 @@
 package com.example.commonservice.service;
 
 import com.example.commonservice.dto.UpdateUserRequest;
+import com.example.commonservice.dto.UserInfoResponse;
 import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.model.User;
 
@@ -22,6 +23,8 @@ public interface UserService {
     List<UserResponse> getAllActive();
 
     UserResponse getById(Integer userId);
+
+    UserInfoResponse getInfoById(Integer userId);
 
     UserResponse blockUser(Integer userId);
 

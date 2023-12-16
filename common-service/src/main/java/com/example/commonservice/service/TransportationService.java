@@ -1,6 +1,7 @@
 package com.example.commonservice.service;
 
 
+import com.example.commonservice.dto.TransportationInfoResponse;
 import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
 
@@ -13,7 +14,7 @@ public interface TransportationService {
 
     List<TransportationResponse> getAllByOrderId(Integer orderId);
 
-    TransportationResponse getById(Integer transportationId);
+    TransportationInfoResponse getById(Integer transportationId);
 
     TransportationResponse updateById(Integer transportationId, TransportationRequest transportationRequest);
 }

@@ -1,5 +1,6 @@
 package com.example.commonservice.service;
 
+import com.example.commonservice.dto.TrailerInfoResponse;
 import com.example.commonservice.dto.TrailerRequest;
 import com.example.commonservice.dto.TrailerResponse;
 
@@ -14,7 +15,7 @@ public interface TrailerService {
 
     TrailerResponse update(Integer id, TrailerRequest trailerRequest);
 
-    TrailerResponse getById(Integer trailerId);
+    TrailerInfoResponse getById(Integer trailerId);
 
     void deleteById(Integer trailerId);
 }

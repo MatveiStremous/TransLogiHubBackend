@@ -1,6 +1,7 @@
 package com.example.commonservice.controller;
 
 import com.example.commonservice.dto.UpdateUserRequest;
+import com.example.commonservice.dto.UserInfoResponse;
 import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,11 @@ public class UserController {
     @GetMapping("/{userId}")
     public UserResponse getUserByLogin(@PathVariable Integer userId) {
         return userService.getById(userId);
+    }
+
+    @GetMapping("/{userId}/info")
+    public UserInfoResponse getUserInfoById(@PathVariable Integer userId) {
+        return userService.getInfoById(userId);
     }
 
     @PutMapping("/block/{userId}")

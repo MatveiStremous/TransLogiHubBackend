@@ -1,5 +1,6 @@
 package com.example.commonservice.dto;
 
+import com.example.commonservice.model.enums.TransportationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,12 +14,18 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransportationRequest {
+public class TransportationInfoResponse {
+    private Integer id;
     private Integer weight;
     private Integer finalDistance;
     private Integer spentFuel;
     private String note;
     private LocalDateTime dateOfLoading;
     private LocalDateTime dateOfUnloading;
-    private Integer orderId;
+    private TransportationStatus status;
+    private OrderResponse order;
+    private UserResponse driver;
+    private TruckResponse truck;
+    private TrailerResponse trailer;
+    private ConvoyResponse convoy;
 }

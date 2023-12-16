@@ -1,5 +1,6 @@
 package com.example.commonservice.service.impl;
 
+import com.example.commonservice.dto.TruckInfoResponse;
 import com.example.commonservice.dto.TruckRequest;
 import com.example.commonservice.dto.TruckResponse;
 import com.example.commonservice.exception.BusinessException;
@@ -50,7 +51,7 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public TruckResponse update(Integer id, TruckRequest truckRequest) {
-        TruckResponse truckFromDb = getById(id);
+        Truck truckFromDb = getEntityById(id);
         if (!truckFromDb.getStateNumber().equals(truckRequest.getStateNumber())) {
             checkIfStateNumberInUse(truckRequest.getStateNumber());
         }
@@ -63,15 +64,13 @@ public class TruckServiceImpl implements TruckService {
     }
 
     @Override
-    public TruckResponse getById(Integer truckId) {
-        Truck truck = truckRepository.findById(truckId)
-                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRUCK-2"));
-        return modelMapper.map(truck, TruckResponse.class);
+    public TruckInfoResponse getById(Integer truckId) {
+        return modelMapper.map(getEntityById(truckId), TruckInfoResponse.class);
     }
 
     @Override
     public void deleteById(Integer truckId) {
-        TruckResponse truckFromDb = getById(truckId);
+        Truck truckFromDb = getEntityById(truckId);
         if (!truckFromDb.getIsActive()) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRUCK-3");
         } else {
@@ -84,5 +83,10 @@ public class TruckServiceImpl implements TruckService {
         if (truckRepository.findByStateNumberAndIsActiveTrue(stateNumber).isPresent()) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRUCK-1");
         }
+    }
+
+    private Truck getEntityById(Integer truckId){
+        return truckRepository.findById(truckId)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRUCK-2"));
     }
 }

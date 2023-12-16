@@ -5,7 +5,6 @@ import com.example.commonservice.dto.OrderDivideResponse;
 import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.OrderResponse;
 import com.example.commonservice.dto.TransportationRequest;
-import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Order;
 import com.example.commonservice.model.enums.OrderStatus;
@@ -65,13 +64,12 @@ public class OrderServiceImpl implements OrderService {
         orderDivideRequest.getTransportations().stream()
                 .map(t -> TransportationRequest.builder()
                         .weight(t.getWeight())
+                        .note(t.getNote())
                         .orderId(orderId)
                         .build())
                 .forEach(transportationService::add);
         return OrderDivideResponse.builder()
-                .transportations(getEntityById(orderId).getTransportations().stream()
-                        .map((t) -> modelMapper.map(t, TransportationResponse.class))
-                        .toList())
+                .transportations(transportationService.getAllByOrderId(orderId))
                 .build();
     }
 

@@ -1,14 +1,13 @@
 package com.example.commonservice.service.impl;
 
+import com.example.commonservice.dto.TrailerInfoResponse;
 import com.example.commonservice.dto.TrailerRequest;
 import com.example.commonservice.dto.TrailerResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Trailer;
-import com.example.commonservice.model.TrailerType;
 import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.repository.TrailerRepository;
 import com.example.commonservice.service.TrailerService;
-import com.example.commonservice.service.TrailerTypeService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
@@ -21,7 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TrailerServiceImpl implements TrailerService {
     private final TrailerRepository trailerRepository;
-    private final TrailerTypeService trailerTypeService;
     private final ModelMapper modelMapper;
 
     @Override
@@ -29,7 +27,6 @@ public class TrailerServiceImpl implements TrailerService {
         checkIfStateNumberInUse(trailerRequest.getStateNumber());
         Trailer trailer = modelMapper.map(trailerRequest, Trailer.class);
         trailer.setIsActive(true);
-        trailer.setTrailerType(modelMapper.map(trailerTypeService.getById(trailerRequest.getTypeId()), TrailerType.class));
         trailer.setId(null);
         trailer.setStatus(TransportStatus.FREE);
         Trailer newTrailer = trailerRepository.save(trailer);
@@ -54,29 +51,28 @@ public class TrailerServiceImpl implements TrailerService {
 
     @Override
     public TrailerResponse update(Integer id, TrailerRequest trailerRequest) {
-        TrailerResponse trailerFromDb = getById(id);
+        Trailer trailerFromDb = getEntityById(id);
         if (!trailerFromDb.getStateNumber().equals(trailerRequest.getStateNumber())) {
             checkIfStateNumberInUse(trailerRequest.getStateNumber());
         }
         Trailer trailerForUpdate = modelMapper.map(trailerRequest, Trailer.class);
         trailerForUpdate.setId(id);
         trailerForUpdate.setStatus(trailerFromDb.getStatus());
-        trailerForUpdate.setTrailerType(modelMapper.map(trailerTypeService.getById(trailerRequest.getTypeId()), TrailerType.class));
         trailerForUpdate.setIsActive(trailerFromDb.getIsActive());
         Trailer updatedTrailer = trailerRepository.save(trailerForUpdate);
         return modelMapper.map(updatedTrailer, TrailerResponse.class);
     }
 
     @Override
-    public TrailerResponse getById(Integer trailerId) {
+    public TrailerInfoResponse getById(Integer trailerId) {
         Trailer trailer = trailerRepository.findById(trailerId)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRAILER-2"));
-        return modelMapper.map(trailer, TrailerResponse.class);
+        return modelMapper.map(trailer, TrailerInfoResponse.class);
     }
 
     @Override
     public void deleteById(Integer trailerId) {
-        TrailerResponse trailerFromDb = getById(trailerId);
+        Trailer trailerFromDb = getEntityById(trailerId);
         if (!trailerFromDb.getIsActive()) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-3");
         } else {
@@ -89,5 +85,10 @@ public class TrailerServiceImpl implements TrailerService {
         if (trailerRepository.findByStateNumberAndIsActiveTrue(stateNumber).isPresent()) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRAILER-1");
         }
+    }
+
+    private Trailer getEntityById(Integer id) {
+        return trailerRepository.findById(id)
+                .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRAILER-2"));
     }
 }

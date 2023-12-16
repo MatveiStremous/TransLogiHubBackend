@@ -13,4 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TransportationDivideRequest {
     Integer weight;
+    String note;
 }

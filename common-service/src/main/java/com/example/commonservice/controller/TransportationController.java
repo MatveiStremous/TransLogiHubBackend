@@ -1,5 +1,6 @@
 package com.example.commonservice.controller;
 
+import com.example.commonservice.dto.TransportationInfoResponse;
 import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.service.TransportationService;
@@ -31,7 +32,7 @@ public class TransportationController {
     }
 
     @GetMapping("{transportationId}")
-    public TransportationResponse getTransportationById(@PathVariable Integer transportationId) {
+    public TransportationInfoResponse getTransportationById(@PathVariable Integer transportationId) {
         return transportationService.getById(transportationId);
     }
 

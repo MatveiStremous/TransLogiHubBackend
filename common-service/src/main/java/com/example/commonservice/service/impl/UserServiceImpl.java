@@ -1,6 +1,7 @@
 package com.example.commonservice.service.impl;
 
 import com.example.commonservice.dto.UpdateUserRequest;
+import com.example.commonservice.dto.UserInfoResponse;
 import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.User;
@@ -63,6 +64,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getById(Integer id) {
         return modelMapper.map(getEntityById(id), UserResponse.class);
+    }
+
+    @Override
+    public UserInfoResponse getInfoById(Integer id) {
+        return modelMapper.map(getEntityById(id), UserInfoResponse.class);
     }
 
     @Override

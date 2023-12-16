@@ -22,4 +22,5 @@ public class TruckRequest {
     private Integer maxCargoWeight;
     private Integer weight;
     private String note;
+    private Integer convoyId;
 }
