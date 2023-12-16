@@ -100,6 +100,14 @@ public class TransportationServiceImpl implements TransportationService {
         return transportationMapper.mapToResponse(transportation);
     }
 
+    @Override
+    public TransportationResponse changeStatus(Integer transportationId, TransportationStatus status) {
+        Transportation transportation = getEntityById(transportationId);
+        transportation.setStatus(status);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
     private Transportation getEntityById(Integer id) {
         return transportationRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-1"));

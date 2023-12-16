@@ -4,6 +4,7 @@ package com.example.commonservice.service;
 import com.example.commonservice.dto.TransportationInfoResponse;
 import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
+import com.example.commonservice.model.enums.TransportationStatus;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface TransportationService {
     TransportationResponse setTruck(Integer transportationId, Integer truckId);
 
     TransportationResponse setConvoy(Integer transportationId, Integer convoyId);
+
+    TransportationResponse changeStatus(Integer transportationId, TransportationStatus status);
 }

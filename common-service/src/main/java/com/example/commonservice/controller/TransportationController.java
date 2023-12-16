@@ -3,6 +3,7 @@ package com.example.commonservice.controller;
 import com.example.commonservice.dto.TransportationInfoResponse;
 import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
+import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
@@ -75,5 +76,11 @@ public class TransportationController {
     public TransportationResponse setConvoy(@PathVariable Integer transportationId,
                                             @PathVariable Integer convoyId) {
         return transportationService.setConvoy(transportationId, convoyId);
+    }
+
+    @PutMapping("/{transportationId}/status/{status}")
+    public TransportationResponse changeStatus(@PathVariable Integer transportationId,
+                                            @PathVariable TransportationStatus status) {
+        return transportationService.changeStatus(transportationId, status);
     }
 }
