@@ -42,7 +42,7 @@ public class Init {
         initUsers();
     }
 
-    private void initUsers(){
+    private void initUsers() {
         User user = User.builder()
                 .login("manager@gmail.com")
                 .firstName("Михаил")
@@ -51,6 +51,7 @@ public class Init {
                 .role(Role.ROLE_MANAGER)
                 .isActive(true)
                 .phone("+375448765632")
+                .convoyId(1)
                 .build();
         user.setPassword(passwordEncoder.encode("Admin123"));
         User savedUser = authUserService.save(user);
@@ -62,6 +63,7 @@ public class Init {
                 .role(Role.ROLE_DRIVER)
                 .isActive(true)
                 .phone("+375448765632")
+                .convoyId(1)
                 .build();
         user2.setPassword(passwordEncoder.encode("Driver123"));
         User savedUser2 = authUserService.save(user2);
@@ -73,6 +75,7 @@ public class Init {
                 .role(Role.ROLE_LOGIEST)
                 .isActive(true)
                 .phone("+375448765632")
+                .convoyId(1)
                 .build();
         user3.setPassword(passwordEncoder.encode("Logiest123"));
         User savedUser3 = authUserService.save(user3);
@@ -153,6 +156,7 @@ public class Init {
                 .yearOfIssue(Year.of(2019))
                 .note("-")
                 .stateNumber("AB3042-1")
+                .convoyId(1)
                 .build());
         truckService.add(TruckRequest.builder()
                 .model("Daf")
@@ -163,6 +167,7 @@ public class Init {
                 .yearOfIssue(Year.of(2022))
                 .note("Тех.осмотр до 30.11.2023")
                 .stateNumber("AB3043-1")
+                .convoyId(1)
                 .build());
         truckService.add(TruckRequest.builder()
                 .model("Daf")
@@ -173,6 +178,7 @@ public class Init {
                 .yearOfIssue(Year.of(2022))
                 .note("Тех.осмотр до 30.11.2023")
                 .stateNumber("AB3044-1")
+                .convoyId(1)
                 .build());
         truckService.add(TruckRequest.builder()
                 .model("Volvo")
@@ -183,6 +189,7 @@ public class Init {
                 .yearOfIssue(Year.of(2019))
                 .note("-")
                 .stateNumber("AB3045-1")
+                .convoyId(1)
                 .build());
     }
 
@@ -205,6 +212,7 @@ public class Init {
                 .loadingDate(LocalDateTime.parse("2023-11-29T19:00:00"))
                 .unloadingDate(LocalDateTime.parse("2023-11-30T12:00:00"))
                 .numberOfTrucks(5)
+                .clientEmail("test@gmail.com")
                 .build());
     }
 }

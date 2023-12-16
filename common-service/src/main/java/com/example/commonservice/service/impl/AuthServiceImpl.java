@@ -46,6 +46,7 @@ public class AuthServiceImpl implements AuthService {
                 .firstName(signUpRequest.getFirstName())
                 .lastName(signUpRequest.getLastName())
                 .middleName(signUpRequest.getMiddleName())
+                .convoyId(signUpRequest.getConvoyId())
                 .role(signUpRequest.getRole())
                 .isActive(true)
                 .build();
