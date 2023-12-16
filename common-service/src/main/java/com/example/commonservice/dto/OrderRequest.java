@@ -22,4 +22,5 @@ public class OrderRequest {
     private LocalDateTime loadingDate;
     private LocalDateTime unloadingDate;
     private String note;
+    private String clientEmail;
 }

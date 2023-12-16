@@ -25,4 +25,5 @@ public class OrderResponse {
     private LocalDateTime unloadingDate;
     private OrderStatus status;
     private String note;
+    private String clientEmail;
 }
