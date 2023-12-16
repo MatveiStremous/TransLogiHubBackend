@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
         userFromDb.setFirstName(updateUserRequest.getFirstName());
         userFromDb.setLastName(updateUserRequest.getLastName());
         userFromDb.setMiddleName(updateUserRequest.getMiddleName());
+        userFromDb.setConvoyId(updateUserRequest.getConvoyId());
         User updatedUser = userRepository.save(userFromDb);
         return modelMapper.map(updatedUser, UserResponse.class);
     }

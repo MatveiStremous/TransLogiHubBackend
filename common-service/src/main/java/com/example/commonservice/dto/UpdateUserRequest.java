@@ -16,4 +16,5 @@ public class UpdateUserRequest {
     private String lastName;
     private String middleName;
     private String phone;
+    private Integer convoyId;
 }

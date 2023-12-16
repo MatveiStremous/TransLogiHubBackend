@@ -20,4 +20,12 @@ public interface TransportationService {
     TransportationResponse updateById(Integer transportationId, TransportationRequest transportationRequest);
 
     ByteArrayResource generatePdfByTransportationId(Integer transportationId);
+
+    TransportationResponse setDriver(Integer transportationId, Integer driverId);
+
+    TransportationResponse setTrailer(Integer transportationId, Integer trailerId);
+
+    TransportationResponse setTruck(Integer transportationId, Integer truckId);
+
+    TransportationResponse setConvoy(Integer transportationId, Integer convoyId);
 }

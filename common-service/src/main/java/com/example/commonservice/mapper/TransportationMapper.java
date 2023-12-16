@@ -40,6 +40,7 @@ public class TransportationMapper {
         transportationResponse.setWeight(transportation.getWeight());
         transportationResponse.setSpentFuel(transportation.getSpentFuel());
         transportationResponse.setNote(transportation.getNote());
+        transportationResponse.setStatus(transportation.getStatus());
         transportationResponse.setOrder(transportation.getOrder() == null ? null : mapper.map(transportation.getOrder(), OrderResponse.class));
         transportationResponse.setConvoy(transportation.getConvoy() == null ? null : mapper.map(transportation.getConvoy(), ConvoyResponse.class));
         transportationResponse.setTrailer(transportation.getTrailer() == null ? null : mapper.map(transportation.getTrailer(), TrailerResponse.class));
@@ -57,6 +58,7 @@ public class TransportationMapper {
         transportationResponse.setWeight(transportation.getWeight());
         transportationResponse.setSpentFuel(transportation.getSpentFuel());
         transportationResponse.setNote(transportation.getNote());
+        transportationResponse.setStatus(transportation.getStatus());
         transportationResponse.setOrder(transportation.getOrder() == null ? null : mapper.map(transportation.getOrder(), OrderResponse.class));
         transportationResponse.setConvoy(transportation.getConvoy() == null ? null : mapper.map(transportation.getConvoy(), ConvoyResponse.class));
         transportationResponse.setTrailer(transportation.getTrailer() == null ? null : mapper.map(transportation.getTrailer(), TrailerResponse.class));

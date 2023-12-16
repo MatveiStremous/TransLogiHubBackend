@@ -5,7 +5,6 @@ import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.mapper.TransportationMapper;
-import com.example.commonservice.model.Order;
 import com.example.commonservice.model.Transportation;
 import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.repository.TransportationRepository;
@@ -69,7 +68,39 @@ public class TransportationServiceImpl implements TransportationService {
         return PdfGenerator.generatePdfByTransportation(getById(transportationId));
     }
 
-    private Transportation getEntityById(Integer id){
+    @Override
+    public TransportationResponse setDriver(Integer transportationId, Integer driverId) {
+        Transportation transportation = getEntityById(transportationId);
+        transportation.setDriverId(driverId);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse setTrailer(Integer transportationId, Integer trailerId) {
+        Transportation transportation = getEntityById(transportationId);
+        transportation.setTrailerId(trailerId);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse setTruck(Integer transportationId, Integer truckId) {
+        Transportation transportation = getEntityById(transportationId);
+        transportation.setTruckId(truckId);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse setConvoy(Integer transportationId, Integer convoyId) {
+        Transportation transportation = getEntityById(transportationId);
+        transportation.setConvoyId(convoyId);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    private Transportation getEntityById(Integer id) {
         return transportationRepository.findById(id)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-1"));
     }

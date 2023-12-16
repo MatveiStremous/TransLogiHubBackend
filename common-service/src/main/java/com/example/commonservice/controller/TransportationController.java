@@ -52,4 +52,28 @@ public class TransportationController {
     public ByteArrayResource getPdfForTransportation(@PathVariable Integer transportationId){
         return transportationService.generatePdfByTransportationId(transportationId);
     }
+
+    @PutMapping("/{transportationId}/driver/{driverId}")
+    public TransportationResponse setDriver(@PathVariable Integer transportationId,
+                                            @PathVariable Integer driverId) {
+        return transportationService.setDriver(transportationId, driverId);
+    }
+
+    @PutMapping("/{transportationId}/truck/{truckId}")
+    public TransportationResponse setTruck(@PathVariable Integer transportationId,
+                                            @PathVariable Integer truckId) {
+        return transportationService.setTruck(transportationId, truckId);
+    }
+
+    @PutMapping("/{transportationId}/trailer/{trailerId}")
+    public TransportationResponse setTrailer(@PathVariable Integer transportationId,
+                                            @PathVariable Integer trailerId) {
+        return transportationService.setTrailer(transportationId, trailerId);
+    }
+
+    @PutMapping("/{transportationId}/convoy/{convoyId}")
+    public TransportationResponse setConvoy(@PathVariable Integer transportationId,
+                                            @PathVariable Integer convoyId) {
+        return transportationService.setConvoy(transportationId, convoyId);
+    }
 }

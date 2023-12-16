@@ -21,4 +21,5 @@ public class UserResponse {
     private String lastName;
     private String middleName;
     private String phone;
+    private ConvoyResponse convoy;
 }
