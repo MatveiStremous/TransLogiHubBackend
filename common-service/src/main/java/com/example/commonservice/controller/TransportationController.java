@@ -5,6 +5,7 @@ import com.example.commonservice.dto.TransportationRequest;
 import com.example.commonservice.dto.TransportationResponse;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,5 +46,10 @@ public class TransportationController {
     public TransportationResponse updateTransportation(@PathVariable Integer transportationId,
                                                  @RequestBody TransportationRequest transportationRequest) {
         return transportationService.updateById(transportationId, transportationRequest);
+    }
+
+    @GetMapping("pdf/{transportationId}")
+    public ByteArrayResource getPdfForTransportation(@PathVariable Integer transportationId){
+        return transportationService.generatePdfByTransportationId(transportationId);
     }
 }
