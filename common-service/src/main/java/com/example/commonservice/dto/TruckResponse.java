@@ -26,4 +26,5 @@ public class TruckResponse {
     private Integer weight;
     private String note;
     private Boolean isActive;
+    private ConvoyResponse convoy;
 }

@@ -26,4 +26,5 @@ public class TrailerResponse {
     private String note;
     private Boolean isActive;
     private TrailerTypeResponse type;
+    private ConvoyResponse convoy;
 }
