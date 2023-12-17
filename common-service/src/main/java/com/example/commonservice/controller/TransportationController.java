@@ -7,6 +7,7 @@ import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.service.TransportationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -82,5 +83,25 @@ public class TransportationController {
     public TransportationResponse changeStatus(@PathVariable Integer transportationId,
                                             @PathVariable TransportationStatus status) {
         return transportationService.changeStatus(transportationId, status);
+    }
+
+    @DeleteMapping("/{transportationId}/convoy")
+    public TransportationResponse deleteConvoyFromTransportation(@PathVariable Integer transportationId) {
+        return transportationService.deleteConvoy(transportationId);
+    }
+
+    @DeleteMapping("/{transportationId}/driver")
+    public TransportationResponse deleteDriverFromTransportation(@PathVariable Integer transportationId) {
+        return transportationService.deleteDriver(transportationId);
+    }
+
+    @DeleteMapping("/{transportationId}/truck")
+    public TransportationResponse deleteTruckFromTransportation(@PathVariable Integer transportationId) {
+        return transportationService.deleteTruck(transportationId);
+    }
+
+    @DeleteMapping("/{transportationId}/trailer")
+    public TransportationResponse deleteTrailerFromTransportation(@PathVariable Integer transportationId) {
+        return transportationService.deleteTrailer(transportationId);
     }
 }

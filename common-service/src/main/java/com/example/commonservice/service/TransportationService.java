@@ -31,4 +31,12 @@ public interface TransportationService {
     TransportationResponse setConvoy(Integer transportationId, Integer convoyId);
 
     TransportationResponse changeStatus(Integer transportationId, TransportationStatus status);
+
+    TransportationResponse deleteConvoy(Integer transportationId);
+
+    TransportationResponse deleteDriver(Integer transportationId);
+
+    TransportationResponse deleteTruck(Integer transportationId);
+
+    TransportationResponse deleteTrailer(Integer transportationId);
 }

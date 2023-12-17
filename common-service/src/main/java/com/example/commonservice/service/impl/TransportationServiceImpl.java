@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -65,7 +66,7 @@ public class TransportationServiceImpl implements TransportationService {
         transportationForUpdate.setId(transportationId);
         transportationForUpdate.setStatus(transportationFromDb.getStatus());
         Transportation updatedTransportation = transportationRepository.save(transportationForUpdate);
-        addToHistory(transportationId, "Грузоперевозка обновлена");
+        addToHistory(transportationId, "Данные грузоперевозки обновлены");
         return transportationMapper.mapToResponse(updatedTransportation);
     }
 
@@ -77,37 +78,45 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public TransportationResponse setDriver(Integer transportationId, Integer driverId) {
         Transportation transportation = getEntityById(transportationId);
+        if (!Objects.equals(transportation.getDriverId(), driverId)) {
+            addToHistory(transportationId, "Назначен водитель №" + driverId);
+        }
         transportation.setDriverId(driverId);
         transportation = transportationRepository.save(transportation);
-        addToHistory(transportationId, "Назначен водитель");
         return transportationMapper.mapToResponse(transportation);
     }
 
     @Override
     public TransportationResponse setTrailer(Integer transportationId, Integer trailerId) {
         Transportation transportation = getEntityById(transportationId);
+        if (!Objects.equals(transportation.getTrailerId(), trailerId)) {
+            addToHistory(transportationId, "Назначен прицеп №" + trailerId);
+        }
         transportation.setTrailerId(trailerId);
         transportation = transportationRepository.save(transportation);
-        addToHistory(transportationId, "Назначен прицеп");
         return transportationMapper.mapToResponse(transportation);
     }
 
     @Override
     public TransportationResponse setTruck(Integer transportationId, Integer truckId) {
         Transportation transportation = getEntityById(transportationId);
+        if (!Objects.equals(transportation.getTruckId(), truckId)) {
+            addToHistory(transportationId, "Назначен грузовик №" + truckId);
+        }
         transportation.setTruckId(truckId);
         transportation = transportationRepository.save(transportation);
-        addToHistory(transportationId, "Назначен грузовик");
         return transportationMapper.mapToResponse(transportation);
     }
 
     @Override
     public TransportationResponse setConvoy(Integer transportationId, Integer convoyId) {
         Transportation transportation = getEntityById(transportationId);
+        if (!Objects.equals(transportation.getConvoyId(), convoyId)) {
+            addToHistory(transportationId, "Назначена колонна №" + convoyId);
+            addToOrderHistory(transportation.getOrderId(), "Грузоперевозка №" + transportationId + " назначена на колонну №" + convoyId);
+        }
         transportation.setConvoyId(convoyId);
         transportation = transportationRepository.save(transportation);
-        addToHistory(transportationId, "Назначена колонна");
-        addToOrderHistory(transportation.getOrderId(), "Грузоперевозка №" + transportationId + " назначена на колонну №" + convoyId);
 
         return transportationMapper.mapToResponse(transportation);
     }
@@ -118,6 +127,64 @@ public class TransportationServiceImpl implements TransportationService {
         transportation.setStatus(status);
         transportation = transportationRepository.save(transportation);
         addToHistory(transportationId, "Статус сменён на " + status);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse deleteConvoy(Integer transportationId) {
+        Transportation transportation = getEntityById(transportationId);
+        if (transportation.getConvoyId() == null) {
+            throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-2");
+        }
+        if (transportation.getDriverId() == null ||
+                transportation.getTrailerId() == null ||
+                transportation.getTruckId() == null) {
+            throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-6");
+        }
+
+        addToHistory(transportationId, "Колонна №" + transportation.getConvoyId() + " снята с выполнения");
+        addToOrderHistory(transportation.getOrderId(), "Колонна №" + transportation.getConvoyId() + " снята с выполнения грузоперевозки №" + transportationId);
+        transportation.setConvoyId(null);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse deleteDriver(Integer transportationId) {
+        Transportation transportation = getEntityById(transportationId);
+        if (transportation.getDriverId() == null) {
+            throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-3");
+        }
+        addToHistory(transportationId, "Водитель №" + transportation.getDriverId() + " снят с выполнения");
+        addToOrderHistory(transportation.getOrderId(), "Водитель №" + transportation.getConvoyId() + " снят с выполнения грузоперевозки №" + transportationId);
+        transportation.setDriverId(null);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse deleteTruck(Integer transportationId) {
+        Transportation transportation = getEntityById(transportationId);
+        if (transportation.getTruckId() == null) {
+            throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-4");
+        }
+        addToHistory(transportationId, "Грузовик №" + transportation.getDriverId() + " снят с выполнения");
+        addToOrderHistory(transportation.getOrderId(), "Грузовик №" + transportation.getConvoyId() + " снят с выполнения грузоперевозки №" + transportationId);
+        transportation.setTruckId(null);
+        transportation = transportationRepository.save(transportation);
+        return transportationMapper.mapToResponse(transportation);
+    }
+
+    @Override
+    public TransportationResponse deleteTrailer(Integer transportationId) {
+        Transportation transportation = getEntityById(transportationId);
+        if (transportation.getTrailerId() == null) {
+            throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-5");
+        }
+        addToHistory(transportationId, "Прицеп №" + transportation.getDriverId() + " снят с выполнения");
+        addToOrderHistory(transportation.getOrderId(), "Прицеп №" + transportation.getConvoyId() + " снят с выполнения грузоперевозки №" + transportationId);
+        transportation.setTrailerId(null);
+        transportation = transportationRepository.save(transportation);
         return transportationMapper.mapToResponse(transportation);
     }
 
