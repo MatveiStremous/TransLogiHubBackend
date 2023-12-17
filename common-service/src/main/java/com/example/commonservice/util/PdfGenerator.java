@@ -89,6 +89,8 @@ public class PdfGenerator {
                 transportation.getTrailer().getBrand() + " " + transportation.getTrailer().getModel() + "\n" + transportation.getTrailer().getStateNumber());
         addTableCell(table, "Водитель", transportation.getDriver() == null ? "Не назначен" :
                 transportation.getDriver().getLogin() + "\n" + transportation.getDriver().getPhone() + "\n" + transportation.getDriver().getLastName() + " " + transportation.getDriver().getFirstName());
+        addTableCell(table, "Колонна", transportation.getConvoy() == null ? "Не назначена" :
+                transportation.getConvoy().getName());
 
         return table;
     }
