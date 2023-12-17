@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
                     .map(user -> modelMapper.map(user, UserResponse.class))
                     .toList();
         } else {
-            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return userRepository.findAllByIsActiveTrueAndConvoyId(convoyId)
                     .stream()
                     .map(user -> modelMapper.map(user, UserResponse.class))
@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
                     .map(user -> modelMapper.map(user, UserResponse.class))
                     .toList();
         } else {
-            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return userRepository.findAllByIsActiveTrueAndConvoyIdAndRole(convoyId, Role.ROLE_DRIVER)
                     .stream()
                     .map(user -> modelMapper.map(user, UserResponse.class))

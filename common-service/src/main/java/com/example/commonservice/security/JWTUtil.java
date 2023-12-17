@@ -76,4 +76,19 @@ public class JWTUtil {
         }
         return null;
     }
+
+    public Integer getIntClaimFromToken(String claimName) {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes != null) {
+            String authorizationHeader = attributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
+
+            if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
+                String jwtToken = authorizationHeader.substring(TOKEN_START_POSITION);
+                DecodedJWT decodedJWT = JWT.decode(jwtToken);
+                return decodedJWT.getClaim(claimName).asInt();
+            }
+        }
+        return null;
+    }
 }

@@ -53,7 +53,7 @@ public class TrailerServiceImpl implements TrailerService {
                     .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
                     .toList();
         } else {
-            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return trailerRepository.findAllByIsActiveTrueAndConvoyId(convoyId, Sort.by(Sort.Direction.ASC, "id"))
                     .stream()
                     .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))

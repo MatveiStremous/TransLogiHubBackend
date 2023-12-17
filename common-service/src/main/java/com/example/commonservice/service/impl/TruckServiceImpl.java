@@ -53,7 +53,7 @@ public class TruckServiceImpl implements TruckService {
                     .map(x -> modelMapper.map(x, TruckResponse.class))
                     .toList();
         } else {
-            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return truckRepository.findAllByIsActiveTrueAndConvoyId(convoyId, Sort.by(Sort.Direction.ASC, "id"))
                     .stream()
                     .map(x -> modelMapper.map(x, TruckResponse.class))
