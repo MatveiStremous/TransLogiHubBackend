@@ -7,8 +7,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.commonservice.model.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -24,6 +23,8 @@ public class JWTUtil {
     private Integer TOKEN_LIFETIME_IN_MINUTES;
     private final String SUBJECT = "User details";
     private final String ISSUER = "Matthew";
+    private final String TOKEN_PREFIX = "Bearer ";
+    private final Integer TOKEN_START_POSITION = 7;
 
     public String generateAccessToken(User user) {
         Date expirationDate = Date.from(ZonedDateTime
@@ -65,10 +66,10 @@ public class JWTUtil {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (attributes != null) {
-            String authorizationHeader = attributes.getRequest().getHeader("Authorization");
+            String authorizationHeader = attributes.getRequest().getHeader(HttpHeaders.AUTHORIZATION);
 
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String jwtToken = authorizationHeader.substring(7);
+            if (authorizationHeader != null && authorizationHeader.startsWith(TOKEN_PREFIX)) {
+                String jwtToken = authorizationHeader.substring(TOKEN_START_POSITION);
                 DecodedJWT decodedJWT = JWT.decode(jwtToken);
                 return decodedJWT.getClaim(claimName).asString();
             }

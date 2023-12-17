@@ -15,4 +15,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAllByIsActiveTrue();
 
     List<User> findAllByIsActiveTrueAndRole(Role role);
+
+    List<User> findAllByIsActiveTrueAndConvoyIdAndRole(Integer convoyId, Role role);
+
+    List<User> findAllByIsActiveTrueAndConvoyId(Integer convoyId);
 }

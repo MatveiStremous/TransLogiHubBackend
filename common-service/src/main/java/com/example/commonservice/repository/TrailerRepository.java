@@ -13,4 +13,5 @@ public interface TrailerRepository extends JpaRepository<Trailer, Integer> {
     Optional<Trailer> findByStateNumberAndIsActiveTrue(String stateNumber);
 
     List<Trailer> findAllByIsActiveTrue(Sort id);
+    List<Trailer> findAllByIsActiveTrueAndConvoyId(Integer ConvoyId, Sort id);
 }

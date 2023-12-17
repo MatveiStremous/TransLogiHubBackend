@@ -5,8 +5,10 @@ import com.example.commonservice.dto.TrailerRequest;
 import com.example.commonservice.dto.TrailerResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Trailer;
+import com.example.commonservice.model.enums.Role;
 import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.repository.TrailerRepository;
+import com.example.commonservice.security.JWTUtil;
 import com.example.commonservice.service.TrailerService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,6 +23,7 @@ import java.util.List;
 public class TrailerServiceImpl implements TrailerService {
     private final TrailerRepository trailerRepository;
     private final ModelMapper modelMapper;
+    private final JWTUtil jwtUtil;
 
     @Override
     public TrailerResponse add(TrailerRequest trailerRequest) {
@@ -43,10 +46,19 @@ public class TrailerServiceImpl implements TrailerService {
 
     @Override
     public List<TrailerResponse> getAllActive() {
-        return trailerRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
-                .stream()
-                .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
-                .toList();
+        String role = jwtUtil.getClaimFromToken("role");
+        if (role.equals(Role.ROLE_MANAGER.toString())) {
+            return trailerRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
+                    .stream()
+                    .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
+                    .toList();
+        } else {
+            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            return trailerRepository.findAllByIsActiveTrueAndConvoyId(convoyId, Sort.by(Sort.Direction.ASC, "id"))
+                    .stream()
+                    .map(trailer -> modelMapper.map(trailer, TrailerResponse.class))
+                    .toList();
+        }
     }
 
     @Override

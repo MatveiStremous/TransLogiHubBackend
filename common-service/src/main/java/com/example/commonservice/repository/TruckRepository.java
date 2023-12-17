@@ -13,4 +13,6 @@ public interface TruckRepository extends JpaRepository<Truck, Integer> {
     Optional<Truck> findByStateNumberAndIsActiveTrue(String stateNumber);
 
     List<Truck> findAllByIsActiveTrue(Sort id);
+
+    List<Truck> findAllByIsActiveTrueAndConvoyId(Integer convoyId, Sort id);
 }

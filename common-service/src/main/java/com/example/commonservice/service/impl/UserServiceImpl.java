@@ -87,10 +87,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAllActive() {
-        return userRepository.findAllByIsActiveTrue()
-                .stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
-                .toList();
+        String role = jwtUtil.getClaimFromToken("role");
+        if (role.equals(Role.ROLE_MANAGER.toString())) {
+            return userRepository.findAllByIsActiveTrue()
+                    .stream()
+                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .toList();
+        } else {
+            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            return userRepository.findAllByIsActiveTrueAndConvoyId(convoyId)
+                    .stream()
+                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .toList();
+        }
     }
 
     @Override
@@ -126,9 +135,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAllActiveDrivers() {
-        return userRepository.findAllByIsActiveTrueAndRole(Role.ROLE_DRIVER)
-                .stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
-                .toList();
+        String role = jwtUtil.getClaimFromToken("role");
+        if (role.equals(Role.ROLE_MANAGER.toString())) {
+            return userRepository.findAllByIsActiveTrueAndRole(Role.ROLE_DRIVER)
+                    .stream()
+                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .toList();
+        } else {
+            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            return userRepository.findAllByIsActiveTrueAndConvoyIdAndRole(convoyId, Role.ROLE_DRIVER)
+                    .stream()
+                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .toList();
+        }
     }
 }

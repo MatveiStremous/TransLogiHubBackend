@@ -5,8 +5,10 @@ import com.example.commonservice.dto.TruckRequest;
 import com.example.commonservice.dto.TruckResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Truck;
+import com.example.commonservice.model.enums.Role;
 import com.example.commonservice.model.enums.TransportStatus;
 import com.example.commonservice.repository.TruckRepository;
+import com.example.commonservice.security.JWTUtil;
 import com.example.commonservice.service.TruckService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -20,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TruckServiceImpl implements TruckService {
     private final TruckRepository truckRepository;
+    private final JWTUtil jwtUtil;
     private final ModelMapper modelMapper;
 
     @Override
@@ -43,10 +46,19 @@ public class TruckServiceImpl implements TruckService {
 
     @Override
     public List<TruckResponse> getAllActive() {
-        return truckRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
-                .stream()
-                .map(x -> modelMapper.map(x, TruckResponse.class))
-                .toList();
+        String role = jwtUtil.getClaimFromToken("role");
+        if (role.equals(Role.ROLE_MANAGER.toString())) {
+            return truckRepository.findAllByIsActiveTrue(Sort.by(Sort.Direction.ASC, "id"))
+                    .stream()
+                    .map(x -> modelMapper.map(x, TruckResponse.class))
+                    .toList();
+        } else {
+            Integer convoyId = Integer.parseInt(jwtUtil.getClaimFromToken("convoyId"));
+            return truckRepository.findAllByIsActiveTrueAndConvoyId(convoyId, Sort.by(Sort.Direction.ASC, "id"))
+                    .stream()
+                    .map(x -> modelMapper.map(x, TruckResponse.class))
+                    .toList();
+        }
     }
 
     @Override
@@ -85,7 +97,7 @@ public class TruckServiceImpl implements TruckService {
         }
     }
 
-    private Truck getEntityById(Integer truckId){
+    private Truck getEntityById(Integer truckId) {
         return truckRepository.findById(truckId)
                 .orElseThrow(() -> new BusinessException(HttpStatus.CONFLICT, "TRUCK-2"));
     }
