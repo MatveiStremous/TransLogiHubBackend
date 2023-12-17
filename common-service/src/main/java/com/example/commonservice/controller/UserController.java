@@ -37,6 +37,11 @@ public class UserController {
         return userService.getAllActive();
     }
 
+    @GetMapping("/active/drivers")
+    public List<UserResponse> getAllActiveDrivers() {
+        return userService.getAllActiveDrivers();
+    }
+
     @PutMapping
     public UserResponse updateUser(@RequestHeader("Authorization") String fullToken,
                                    @RequestBody UpdateUserRequest updateUserRequest) {

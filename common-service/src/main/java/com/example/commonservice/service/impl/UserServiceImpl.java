@@ -5,6 +5,7 @@ import com.example.commonservice.dto.UserInfoResponse;
 import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.User;
+import com.example.commonservice.model.enums.Role;
 import com.example.commonservice.repository.UserRepository;
 import com.example.commonservice.security.JWTUtil;
 import com.example.commonservice.service.UserService;
@@ -121,5 +122,13 @@ public class UserServiceImpl implements UserService {
         String token = fullJwtToken.substring(TOKEN_START_POSITION);
         String login = jwtUtil.getClaimFromToken(token, "login");
         return getByLogin(login);
+    }
+
+    @Override
+    public List<UserResponse> getAllActiveDrivers() {
+        return userRepository.findAllByIsActiveTrueAndRole(Role.ROLE_DRIVER)
+                .stream()
+                .map(user -> modelMapper.map(user, UserResponse.class))
+                .toList();
     }
 }

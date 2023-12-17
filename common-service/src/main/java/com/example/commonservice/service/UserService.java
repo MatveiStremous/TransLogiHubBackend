@@ -31,4 +31,6 @@ public interface UserService {
     UserResponse unblockUser(Integer userId);
 
     UserResponse getUserInfo(String fullToken);
+
+    List<UserResponse> getAllActiveDrivers();
 }
