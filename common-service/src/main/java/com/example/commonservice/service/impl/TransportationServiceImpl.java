@@ -136,9 +136,9 @@ public class TransportationServiceImpl implements TransportationService {
         if (transportation.getConvoyId() == null) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-2");
         }
-        if (transportation.getDriverId() == null ||
-                transportation.getTrailerId() == null ||
-                transportation.getTruckId() == null) {
+        if (transportation.getDriverId() != null ||
+                transportation.getTrailerId() != null ||
+                transportation.getTruckId() != null) {
             throw new BusinessException(HttpStatus.CONFLICT, "TRANSPORTATION-6");
         }
 
