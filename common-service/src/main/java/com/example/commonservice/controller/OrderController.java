@@ -6,6 +6,7 @@ import com.example.commonservice.dto.OrderRequest;
 import com.example.commonservice.dto.OrderResponse;
 import com.example.commonservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,11 @@ public class OrderController {
     public OrderResponse updateOrder(@PathVariable Integer orderId,
                                      @RequestBody OrderRequest orderRequest) {
         return orderService.updateById(orderId, orderRequest);
+    }
+
+    @DeleteMapping("{orderId}")
+    public OrderResponse deleteOrder(@PathVariable Integer orderId) {
+        return orderService.deleteById(orderId);
     }
 
     @PostMapping("/divide/{orderId}")

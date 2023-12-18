@@ -9,6 +9,7 @@ import com.example.commonservice.exception.BusinessException;
 import com.example.commonservice.model.Order;
 import com.example.commonservice.model.enums.HistoryType;
 import com.example.commonservice.model.enums.OrderStatus;
+import com.example.commonservice.model.enums.TransportationStatus;
 import com.example.commonservice.repository.OrderRepository;
 import com.example.commonservice.service.HistoryService;
 import com.example.commonservice.service.OrderService;
@@ -75,6 +76,21 @@ public class OrderServiceImpl implements OrderService {
         return OrderDivideResponse.builder()
                 .transportations(transportationService.getAllByOrderId(orderId))
                 .build();
+    }
+
+    @Override
+    public OrderResponse deleteById(Integer orderId) {
+        Order orderFromDb = getEntityById(orderId);
+        if (!transportationService.getAllByOrderId(orderId).stream()
+                .filter(transportationResponse ->
+                        !(transportationResponse.getStatus() == TransportationStatus.CANCELED
+                                || transportationResponse.getStatus() == TransportationStatus.COMPLETED)).toList().isEmpty()) {
+            throw new BusinessException(HttpStatus.CONFLICT, "ORDER-2");
+        }
+        orderFromDb.setStatus(OrderStatus.CANCELED);
+        Order updatedOrder = orderRepository.save(orderFromDb);
+        addToHistory(orderFromDb.getId(), "Заказ отменён");
+        return modelMapper.map(updatedOrder, OrderResponse.class);
     }
 
     public Order getEntityById(Integer orderId) {

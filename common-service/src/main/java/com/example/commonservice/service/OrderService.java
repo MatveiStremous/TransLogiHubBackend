@@ -18,5 +18,7 @@ public interface OrderService {
     OrderResponse updateById(Integer orderId, OrderRequest orderRequest);
 
     OrderDivideResponse divideIntoTransportation(Integer orderId, OrderDivideRequest orderDivideRequest);
+
+    OrderResponse deleteById(Integer orderId);
 }
 
