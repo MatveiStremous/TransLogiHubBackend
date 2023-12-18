@@ -8,4 +8,8 @@ public interface ReportService {
     ReportResponse getConvoysTransportationsNumberByDates(LocalDate start, LocalDate end);
 
     ReportResponse getConvoysTransportationsSuccessByDates(LocalDate start, LocalDate end);
+
+    ReportResponse getTransportationsStatuses();
+
+    ReportResponse getUsersConvoyNumber();
 }

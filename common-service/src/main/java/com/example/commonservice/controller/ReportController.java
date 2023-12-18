@@ -24,7 +24,17 @@ public class ReportController {
 
     @GetMapping("/convoy/transportations/success")
     public ReportResponse getConvoysTransportationsSuccess(@RequestParam("start") LocalDate start,
-                                                          @RequestParam("end") LocalDate end) {
+                                                           @RequestParam("end") LocalDate end) {
         return reportService.getConvoysTransportationsSuccessByDates(start, end);
+    }
+
+    @GetMapping("/transportations/status")
+    public ReportResponse getConvoysTransportationsSuccess() {
+        return reportService.getTransportationsStatuses();
+    }
+
+    @GetMapping("/users/convoy/number")
+    public ReportResponse getUsersConvoyNumber() {
+        return reportService.getUsersConvoyNumber();
     }
 }

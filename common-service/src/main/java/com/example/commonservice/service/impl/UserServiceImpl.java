@@ -4,6 +4,7 @@ import com.example.commonservice.dto.UpdateUserRequest;
 import com.example.commonservice.dto.UserInfoResponse;
 import com.example.commonservice.dto.UserResponse;
 import com.example.commonservice.exception.BusinessException;
+import com.example.commonservice.mapper.UserMapper;
 import com.example.commonservice.model.User;
 import com.example.commonservice.model.enums.Role;
 import com.example.commonservice.repository.UserRepository;
@@ -22,6 +23,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
+    private final UserMapper userMapper;
     private final JWTUtil jwtUtil;
     private final Integer TOKEN_START_POSITION = 7;
 
@@ -29,7 +31,7 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> getAll() {
         return userRepository.findAll(Sort.by(Sort.Direction.DESC, "id"))
                 .stream()
-                .map(user -> modelMapper.map(user, UserResponse.class))
+                .map(userMapper::mapToResponse)
                 .toList();
     }
 
@@ -91,13 +93,13 @@ public class UserServiceImpl implements UserService {
         if (role.equals(Role.ROLE_MANAGER.toString())) {
             return userRepository.findAllByIsActiveTrue()
                     .stream()
-                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .map(userMapper::mapToResponse)
                     .toList();
         } else {
             Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return userRepository.findAllByIsActiveTrueAndConvoyId(convoyId)
                     .stream()
-                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .map(userMapper::mapToResponse)
                     .toList();
         }
     }
@@ -139,13 +141,13 @@ public class UserServiceImpl implements UserService {
         if (role.equals(Role.ROLE_MANAGER.toString())) {
             return userRepository.findAllByIsActiveTrueAndRole(Role.ROLE_DRIVER)
                     .stream()
-                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .map(userMapper::mapToResponse)
                     .toList();
         } else {
             Integer convoyId = jwtUtil.getIntClaimFromToken("convoyId");
             return userRepository.findAllByIsActiveTrueAndConvoyIdAndRole(convoyId, Role.ROLE_DRIVER)
                     .stream()
-                    .map(user -> modelMapper.map(user, UserResponse.class))
+                    .map(userMapper::mapToResponse)
                     .toList();
         }
     }
