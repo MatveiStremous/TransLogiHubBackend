@@ -25,7 +25,7 @@ public class ReportServiceImpl implements ReportService {
     private final UserService userService;
 
     @Override
-    public ReportResponse getConvoysTransportationsNumberByDates(LocalDate start, LocalDate end) {
+    public List<ReportResponse> getConvoysTransportationsNumberByDates(LocalDate start, LocalDate end) {
         List<TransportationResponse> transportations = transportationService.getAll();
 
         List<TransportationResponse> transportationsInRange = transportations.stream()
@@ -44,13 +44,14 @@ public class ReportServiceImpl implements ReportService {
                                 Long::intValue
                         )
                 ));
-        return ReportResponse.builder()
-                .report(convoyTransportationCount)
-                .build();
+
+        return convoyTransportationCount.entrySet().stream()
+                .map(entry -> new ReportResponse(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     @Override
-    public ReportResponse getConvoysTransportationsSuccessByDates(LocalDate start, LocalDate end) {
+    public List<ReportResponse> getConvoysTransportationsSuccessByDates(LocalDate start, LocalDate end) {
         List<TransportationResponse> transportations = transportationService.getAll();
 
         List<TransportationResponse> transportationsInRange = transportations.stream()
@@ -76,13 +77,13 @@ public class ReportServiceImpl implements ReportService {
             successPercentageByConvoy.put(convoyName, successPercentage);
         }
 
-        return ReportResponse.builder()
-                .report(successPercentageByConvoy)
-                .build();
+        return successPercentageByConvoy.entrySet().stream()
+                .map(entry -> new ReportResponse(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     @Override
-    public ReportResponse getTransportationsStatuses() {
+    public List<ReportResponse> getTransportationsStatuses() {
         List<TransportationResponse> transportationsInRange = transportationService.getAll().stream()
                 .filter(transportation ->
                         transportation.getStatus() != TransportationStatus.COMPLETED &&
@@ -94,13 +95,13 @@ public class ReportServiceImpl implements ReportService {
                         transportation -> transportation.getStatus().toString(),
                         Collectors.summingInt(t -> 1)
                 ));
-        return ReportResponse.builder()
-                .report(transportationsStatuses)
-                .build();
+        return transportationsStatuses.entrySet().stream()
+                .map(entry -> new ReportResponse(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     @Override
-    public ReportResponse getUsersConvoyNumber() {
+    public List<ReportResponse> getUsersConvoyNumber() {
         List<UserResponse> users = userService.getAll().stream()
                 .filter(UserResponse::getIsActive)
                 .toList();
@@ -109,9 +110,9 @@ public class ReportServiceImpl implements ReportService {
                         user -> user.getConvoy().getName(),
                         Collectors.summingInt(t -> 1)
                 ));
-        return ReportResponse.builder()
-                .report(usersConvoy)
-                .build();
+        return usersConvoy.entrySet().stream()
+                .map(entry -> new ReportResponse(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     private boolean isTransportationSuccessful(TransportationResponse transportation) {
