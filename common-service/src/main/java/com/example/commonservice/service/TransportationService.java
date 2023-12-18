@@ -16,6 +16,8 @@ public interface TransportationService {
 
     List<TransportationResponse> getAllByOrderId(Integer orderId);
 
+    List<TransportationResponse> getAllByConvoyId(Integer convoyId);
+
     TransportationInfoResponse getById(Integer transportationId);
 
     TransportationResponse updateById(Integer transportationId, TransportationRequest transportationRequest);

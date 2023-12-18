@@ -55,6 +55,14 @@ public class TransportationServiceImpl implements TransportationService {
     }
 
     @Override
+    public List<TransportationResponse> getAllByConvoyId(Integer convoyId) {
+        return transportationRepository.findAllByConvoyId(convoyId, Sort.by(Sort.Direction.DESC, "id"))
+                .stream()
+                .map(transportationMapper::mapToResponse)
+                .toList();
+    }
+
+    @Override
     public TransportationInfoResponse getById(Integer transportationId) {
         return transportationMapper.mapToInfoResponse(getEntityById(transportationId));
     }
@@ -62,10 +70,13 @@ public class TransportationServiceImpl implements TransportationService {
     @Override
     public TransportationResponse updateById(Integer transportationId, TransportationRequest transportationRequest) {
         Transportation transportationFromDb = getEntityById(transportationId);
-        Transportation transportationForUpdate = transportationMapper.mapToEntity(transportationRequest);
-        transportationForUpdate.setId(transportationId);
-        transportationForUpdate.setStatus(transportationFromDb.getStatus());
-        Transportation updatedTransportation = transportationRepository.save(transportationForUpdate);
+        transportationFromDb.setWeight(transportationRequest.getWeight());
+        transportationFromDb.setNote(transportationRequest.getNote());
+        transportationFromDb.setSpentFuel(transportationRequest.getSpentFuel());
+        transportationFromDb.setFinalDistance(transportationRequest.getFinalDistance());
+        transportationFromDb.setDateOfLoading(transportationRequest.getDateOfLoading());
+        transportationFromDb.setDateOfUnloading(transportationRequest.getDateOfUnloading());
+        Transportation updatedTransportation = transportationRepository.save(transportationFromDb);
         addToHistory(transportationId, "Данные грузоперевозки обновлены");
         return transportationMapper.mapToResponse(updatedTransportation);
     }

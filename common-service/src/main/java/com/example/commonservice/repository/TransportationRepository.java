@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface TransportationRepository extends JpaRepository<Transportation, Integer> {
     List<Transportation> findAllByOrderId(Integer orderId, Sort sort);
+
+    List<Transportation> findAllByConvoyId(Integer convoyId, Sort sort);
 }
